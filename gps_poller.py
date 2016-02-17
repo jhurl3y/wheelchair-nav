@@ -27,7 +27,7 @@ class GpsPoller(threading.Thread):
         return self.__stop.isSet()
 
     def get_location(self):
-        if self.__gpsd.fix.satellites:
-        	latitude = self.__gpsd.fix.latitude
-        	longitude = self.__gpsd.fix.longitude        
-        	return [latitude, longitude]
+        if self.__gpsd.satellites:
+            latitude = self.__gpsd.fix.latitude
+            longitude = self.__gpsd.fix.longitude        
+            return [latitude, longitude]
