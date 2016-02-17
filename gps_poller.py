@@ -25,4 +25,4 @@ class GpsPoller(threading.Thread):
     def get_location(self):
 	lat = self.__gpsd.fix.latitude
 	long = self.__gpsd.fix.longitude        
-	return gps_obj.GPS(lat, long)
+	return [lat, long]
