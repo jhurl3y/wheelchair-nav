@@ -20,4 +20,6 @@ class GpsPoller(threading.Thread):
             time.sleep(5) #set to whatever
 
     def get_location(self):
-        return GPS(self.__gpsd.fix.latitude, self.__gps.fix.longitude)
+	lat = self.__gpsd.fix.latitude
+	long = self.__gpsd.fix.longitude        
+	return gps_obj.GPS(lat, long)

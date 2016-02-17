@@ -3,8 +3,8 @@ import gps_poller
 import gps_obj
 
 # create the threads
-gpsp = GpsPoller() 
-imup = IMUPoller()
+gpsp = gps_poller.GpsPoller() 
+imup = imu_poller.IMUPoller()
 
 gpsp.start()
 imup.start()
@@ -18,3 +18,7 @@ try:
         print 'pitch: ' , imu_data[0]
         print 'roll: ' , imu_data[1]
         print 'yaw: ' , imu_data[2]
+except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
+    print "\nKilling Thread..."
+    gpsp.running = False
+    gpsp.join() # wait for the thread to finish what it's doing

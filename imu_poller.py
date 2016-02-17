@@ -5,6 +5,7 @@ import RTIMU
 import os.path
 import time
 import math
+import threading
 
 SETTINGS_FILE = "RTIMULib"
 
