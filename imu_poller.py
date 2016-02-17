@@ -20,16 +20,17 @@ class IMUPoller(threading.Thread):
         self.__imu.setAccelEnable(True)
         self.__imu.setCompassEnable(True)
         self.__poll_interval = self.__imu.IMUGetPollInterval()
-        self.__data = 0
+	self.__data = []        
 
-        def run(self):
-            while True:
-                if self.__imu.IMURead():
-                    self.__data = imu.getIMUData()["fusionPose"]
-                    time.sleep(poll_interval*10.0/1000.0)
+    def run(self):
+        while True:
+            if self.__imu.IMURead():
+                self.__data = imu.getIMUData()["fusionPose"]
+                time.sleep(poll_interval*10.0/1000.0)
 
-        def get_data(self):
-            return [math.degrees(data[0]), math.degrees(data[1]), math.degrees(data[2])]
+    def get_data(self):
+	if not self.__data:
+            return [math.degrees(self.__data[0]), math.degrees(self.__data[1]), math.degrees(self.__data[2])]
 
 
                     
