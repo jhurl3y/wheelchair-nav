@@ -15,6 +15,7 @@ class IMUPoller(threading.Thread):
         threading.Thread.__init__(self)
         s = RTIMU.Settings(SETTINGS_FILE)
         self.__imu = RTIMU.RTIMU(s)
+        self.__imu.IMUInit()
         self.__imu.setSlerpPower(0.02)
         self.__imu.setGyroEnable(True)
         self.__imu.setAccelEnable(True)
