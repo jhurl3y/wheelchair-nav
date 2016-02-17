@@ -30,7 +30,4 @@ class IMUPoller(threading.Thread):
 
     def get_data(self):
 	if not self.__data:
-            return [math.degrees(self.__data[0]), math.degrees(self.__data[1]), math.degrees(self.__data[2])]
-
-
-                    
+            return [math.degrees(self.__data[0]), math.degrees(self.__data[1]), math.degrees(self.__data[2])]              
