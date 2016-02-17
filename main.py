@@ -11,6 +11,7 @@ gpsp.start()
 
 try:
     while True:
+        os.system('clear')
         location = gpsp.get_location()
 	if location:
         #imu_data = imup.get_data()
@@ -18,6 +19,8 @@ try:
        # print 'pitch: ' , imu_data[0]
        #print 'roll: ' , imu_data[1]
        # print 'yaw: ' , imu_data[2]
+    else:
+        print 'No fix'
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     print "\nKilling Thread..."
     gpsp.stop()
