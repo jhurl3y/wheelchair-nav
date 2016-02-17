@@ -20,7 +20,7 @@ class IMUPoller(threading.Thread):
         self.__imu.setAccelEnable(True)
         self.__imu.setCompassEnable(True)
         self.__poll_interval = self.__imu.IMUGetPollInterval()
-	    self.__data = []
+	self.__data = []
         self.__stop = threading.Event()        
 
     def run(self):
@@ -36,7 +36,7 @@ class IMUPoller(threading.Thread):
         return self.__stop.isSet()
 
     def get_data(self):
-	    if self.__data:
+	if self.__data:
             pitch = math.degrees(self.__data[0])
             roll = math.degrees(self.__data[1])
             yaw = math.degrees(self.__data[2])

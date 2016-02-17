@@ -14,8 +14,7 @@ try:
         location = gpsp.get_location()
 	if location:
         #imu_data = imup.get_data()
-            print 'latitude: ' , location[0]
-            print 'longitude: ' , location[1]
+            print 'latitude: ' , location[0], ' longitude: ', location[1]
        # print 'pitch: ' , imu_data[0]
        #print 'roll: ' , imu_data[1]
        # print 'yaw: ' , imu_data[2]
