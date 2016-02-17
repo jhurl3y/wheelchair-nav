@@ -20,14 +20,24 @@ class IMUPoller(threading.Thread):
         self.__imu.setAccelEnable(True)
         self.__imu.setCompassEnable(True)
         self.__poll_interval = self.__imu.IMUGetPollInterval()
-	self.__data = []        
+	    self.__data = []
+        self.__stop = threading.Event()        
 
     def run(self):
-        while True:
+        while not self.stopped():
             if self.__imu.IMURead():
                 self.__data = imu.getIMUData()["fusionPose"]
                 time.sleep(poll_interval*10.0/1000.0)
 
+    def stop(self):
+        self.__stop.set()
+
+    def stopped(self):
+        return self.__stop.isSet()
+
     def get_data(self):
-	if not self.__data:
-            return [math.degrees(self.__data[0]), math.degrees(self.__data[1]), math.degrees(self.__data[2])]              
+	    if self.__data:
+            pitch = math.degrees(self.__data[0])
+            roll = math.degrees(self.__data[1])
+            yaw = math.degrees(self.__data[2])
+            return [pitch, roll, yaw]              

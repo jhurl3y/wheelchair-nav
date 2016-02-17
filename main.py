@@ -21,4 +21,5 @@ try:
        # print 'yaw: ' , imu_data[2]
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     print "\nKilling Thread..."
+    gpsp.stop()
     gpsp.join() # wait for the thread to finish what it's doing

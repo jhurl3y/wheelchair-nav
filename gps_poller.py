@@ -13,16 +13,20 @@ class GpsPoller(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.__gpsd = gps(mode=WATCH_ENABLE) #starting the stream of info
+        self.__stop = threading.Event()
    
     def run(self):
-        try:
-            while True:
-                self.__gpsd.next() #grab EACH set of gpsd info to clear the buffer
-                time.sleep(5) #set to whatever
-        except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-            gpsp.join() # wait for the thread to finish what it's doing
+        while not self.stopped():
+            self.__gpsd.next() #grab EACH set of gpsd info to clear the buffer
+            time.sleep(5) #set to whatever
+
+    def stop(self):
+        self.__stop.set()
+
+    def stopped(self):
+        return self.__stop.isSet()
 
     def get_location(self):
-	lat = self.__gpsd.fix.latitude
-	long = self.__gpsd.fix.longitude        
-	return [lat, long]
+    	latitude = self.__gpsd.fix.latitude
+    	longitude = self.__gpsd.fix.longitude        
+    	return [latitude, longitude]
