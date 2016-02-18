@@ -5,6 +5,7 @@ sys.path.append('.')
 import os.path
 import time
 import math
+import navigation as nav
 # create the threads
 gpsp = gps_poller.GpsPoller() 
 
@@ -49,7 +50,7 @@ try:
 	if imu.IMURead():
             data = imu.getIMUData()
             fusionPose = data["fusionPose"]
-            print("yaw: %f" % (math.degrees(fusionPose[2]))) 
+            print("yaw: %f" % nav.yaw_to_heading(math.degrees(fusionPose[2]), -90.0))) 
             time.sleep(poll_interval*1.0/1000.0)
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     print "\nKilling Thread..."
