@@ -37,3 +37,10 @@ def get_distance(gps_start, gps_end):
     c = 2 * Math.atan2(math.sqrt(a), math.sqrt(1-a)); 
 
     return R * c
+
+@staticmethod
+def yaw_to_heading(yaw, offset):
+    if -180.0 < yaw < 0.0:
+        yaw = yaw + 360.0
+    yaw = yaw + offset
+    return yaw
