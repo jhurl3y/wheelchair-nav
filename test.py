@@ -1,8 +1,8 @@
 import navigation as nav
 import gps_obj as gps
 
-loc_a = gps.GPS(53.272909, -9.059584)
-loc_b = gps.GPS(53.273292, -9.060419)
+loc_b = gps.GPS(43.682213, -70.450696)
+loc_a = gps.GPS(43.682194, -70.450769)
 print(nav.get_bearing(loc_a, loc_b))
 print(nav.get_distance(loc_a, loc_b))
 # 53.272909, -9.059584 google maps home
