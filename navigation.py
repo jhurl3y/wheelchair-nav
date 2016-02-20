@@ -20,7 +20,7 @@ def get_bearing(gps_start, gps_end):
     return (math.degrees(math.atan2(dLong, dPhi)) + 360.0) % 360.0;
 
 def get_distance(gps_start, gps_end):
-    R = 6371; # km
+    R = 6371000; # m
 
     startLat = gps_start.get_latitude_radians()
     startLong = gps_start.get_longitude_radians()
