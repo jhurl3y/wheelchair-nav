@@ -46,3 +46,18 @@ def yaw_to_heading(yaw, offset):
 	yaw = 360.0 + yaw
     
     return yaw
+
+# degrees, mins, seconds => degrees
+# int, int, float
+def convert_to_degrees(degrees, minutes, seconds):
+    return degrees + (minutes / 60.0) + (seconds / 3600.0) 
+
+# degrees => degrees, mins, seconds
+# degrees has to be postive
+def convert_from_degrees(degrees):
+    d = math.floor(degrees)
+    minutes = (degrees - d) * 60.0
+    m = math.floor(minutes)
+    s = (minutes - m) * 60.0
+    return [int(d), int(m), round(s, 5)]
+
