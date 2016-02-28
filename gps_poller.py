@@ -30,3 +30,6 @@ class GpsPoller(threading.Thread):
             latitude = self.__gpsd.fix.latitude
             longitude = self.__gpsd.fix.longitude        
             return [latitude, longitude]
+
+    def get_timestamp(self):
+        return self.__gpsd.fix.time

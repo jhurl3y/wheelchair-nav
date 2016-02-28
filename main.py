@@ -6,6 +6,8 @@ import os.path
 import time 
 import math 
 import navigation as nav
+import gps_estimation as estimator
+import gps_obj
 # create the threads
 gpsp = gps_poller.GpsPoller() 
 
@@ -39,21 +41,74 @@ poll_interval = imu.IMUGetPollInterval()
 print("Recommended Poll Interval: %dmS\n" % poll_interval)
 
 try:
-    location = []
     while True:
- 	if gpsp.get_location() != location: 
-            location = gpsp.get_location()
-	    if location:
-                print 'latitude: ' , location[0], ' longitude: ', location[1]
-    	    else:
-                 print 'No fix'
-	if imu.IMURead():
-            data = imu.getIMUData()
+        last_waypoint = gps_obj.GPS(53.272909, -9.059584)
+        next_waypoint = gps_obj.GPS(53.273292, -9.060419)
+
+        # Have to wait initially to get fix
+        while gpsp.get_location() is None:
+            print 'No fix'
+            sleep(1)
+
+        print 'Have fix'
+
+        while imu.IMURead() is None:
+            print 'No IMU reading'
+            sleep(1)
+
+        print 'Have IMU reading'
+
+        location = gpsp.get_location()
+        current_timestamp = gpsp.get_timestamp()
+        data = imu.IMURead()
+
+        while location & data:
+            print 'Next lat/lng: ', location[0], ', ', location[1]
+            print 'Read lat/lng: ', location[0], ', ', location[1]
+            
             fusionPose = data["fusionPose"]
-#            print("yaw: %f" % math.degrees(fusionPose[2]))
-            print("yaw: %f" % nav.yaw_to_heading(math.degrees(fusionPose[2]), -90.0))
-            time.sleep(poll_interval*1.0/1000.0)
+            yaw = math.degrees(fusionPose[2])
+            print 'Read yaw: %f' % math.degrees(fusionPose[2])
+
+            heading = nav.yaw_to_heading(yaw, -90.0)
+            print 'Heading: %f' % heading
+
+            estimator = estimator.Estimator(1)
+            estimator.set_state(last_waypoint.latitude, last_waypoint.longitude, 0, last_waypoint.timestamp) 
+            estimator.k_filter(location[0], location[1], 0, current_timestamp)
+            last_waypoint = gps_obj.GPS(estimator.lat, estimator.long)
+            last_waypoint.set_timestamp(current_timestamp)
+            print 'Filtered lat/lng: ', last_waypoint.latitude, ', ', last_waypoint.longitude
+
+            bearing = nav.get_bearing(last_waypoint, next_waypoint)
+            distance = nav.get_distance(last_waypoint, next_waypoint)
+
+            print 'Bearing: ', bearing, ' Distance: ', distance
+
+            sleep(2)
+            location = gpsp.get_location()
+            data = imu.IMURead()
+    
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     print "\nKilling Thread..."
     gpsp.stop()
     gpsp.join() # wait for the thread to finish what it's doing
+
+
+
+
+
+# location = []
+# while True:
+# if gpsp.get_location() != location: 
+#         location = gpsp.get_location()
+#     if location:
+#             print 'latitude: ' , location[0], ' longitude: ', location[1]
+#         else:
+#              print 'No fix'
+# if imu.IMURead():
+#         data = imu.getIMUData()
+#         fusionPose = data["fusionPose"]
+# #            print("yaw: %f" % math.degrees(fusionPose[2]))
+#         print("yaw: %f" % nav.yaw_to_heading(math.degrees(fusionPose[2]), -90.0))
+#         time.sleep(poll_interval*1.0/1000.0)
