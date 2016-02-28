@@ -1,4 +1,5 @@
 import gps_poller 
+import time
 import RTIMU 
 import sys, getopt 
 sys.path.append('.') 
@@ -8,6 +9,8 @@ import math
 import navigation as nav
 import gps_estimation as estimator
 import gps_obj
+from time import sleep
+
 # create the threads
 gpsp = gps_poller.GpsPoller() 
 
@@ -36,7 +39,7 @@ imu.setSlerpPower(0.02)
 imu.setGyroEnable(True)
 imu.setAccelEnable(True)
 imu.setCompassEnable(True)
-
+estimator = estimator.Estimator(1)
 poll_interval = imu.IMUGetPollInterval()
 print("Recommended Poll Interval: %dmS\n" % poll_interval)
 
@@ -59,10 +62,11 @@ try:
         print 'Have IMU reading'
 
         location = gpsp.get_location()
-        current_timestamp = gpsp.get_timestamp()
-        data = imu.IMURead()
+        current_timestamp = time.time() # gpsp.get_timestamp()
+	last_waypoint.set_timestamp(current_timestamp)
+        data = imu.getIMUData()
 
-        while location & data:
+        while (not location is None) & imu.IMURead():
             print 'Next lat/lng: ', location[0], ', ', location[1]
             print 'Read lat/lng: ', location[0], ', ', location[1]
             
@@ -73,9 +77,9 @@ try:
             heading = nav.yaw_to_heading(yaw, -90.0)
             print 'Heading: %f' % heading
 
-            estimator = estimator.Estimator(1)
+	    current_timestamp = time.time() # gpsp.get_timestamp()
             estimator.set_state(last_waypoint.latitude, last_waypoint.longitude, 0, last_waypoint.timestamp) 
-            estimator.k_filter(location[0], location[1], 0, current_timestamp)
+            estimator.k_filter(location[0], location[1], 1, current_timestamp)
             last_waypoint = gps_obj.GPS(estimator.lat, estimator.long)
             last_waypoint.set_timestamp(current_timestamp)
             print 'Filtered lat/lng: ', last_waypoint.latitude, ', ', last_waypoint.longitude

@@ -8,7 +8,7 @@ class Estimator():
         self.min_accuracy = -1
         self.variance = -1
 
-    def set_state(lat, lon, accuracy, timestamp):
+    def set_state(self, lat, lon, accuracy, timestamp):
         self.lat = lat
         self.long = lon
         self.variance = accuracy * accuracy
