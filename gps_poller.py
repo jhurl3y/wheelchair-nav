@@ -11,16 +11,24 @@ class GpsPoller(threading.Thread):
         threading.Thread.__init__(self)
         self.__gpsd = gps(mode=WATCH_ENABLE) #starting the stream of info
         self.__stop = threading.Event()
-        locations = list()
+        self.locations = list()
    
     def run(self):
         while not self.stopped():
             self.__gpsd.next() #grab EACH set of gpsd info to clear the buffer
             if self.__gpsd.satellites:
-                if len(locations) >= 30:
-                    locations.pop(0)
-                locations.append[self.__gpsd.fix.latitude, self.__gpsd.fix.longitude]
-            time.sleep(0.1) #set to whatever, 10 Hz
+
+		curr_loc = [self.__gpsd.fix.latitude, self.__gpsd.fix.longitude]
+		
+		if len(self.locations) == 0:
+                    self.locations.append(curr_loc)
+		    
+
+		if curr_loc != self.locations[-1]:
+                    if len(self.locations) >= 20:
+                        self.locations.pop(0)
+	            self.locations.append(curr_loc)
+            time.sleep(0.01) #set to whatever, 10 Hz
 
     def stop(self):
         self.__stop.set()
@@ -32,11 +40,11 @@ class GpsPoller(threading.Thread):
         if self.__gpsd.satellites:
             sum_lat = 0
             sum_long = 0
-            for location in locations:
+            for location in self.locations:
                 sum_lat = sum_lat + location[0]
                 sum_long = sum_long + location[1]
-
-            return [sum_lat/len(locations), sum_long/len(locations)]
+#	    print len(self.locations)
+            return [sum_lat/len(self.locations), sum_long/len(self.locations)]
             
     def get_timestamp(self):
         return self.__gpsd.fix.time
