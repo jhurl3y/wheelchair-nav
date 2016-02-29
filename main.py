@@ -88,7 +88,7 @@ try:
             distance = nav.get_distance(last_waypoint, next_waypoint)
 
             print 'Bearing: ', bearing, ' Distance: ', distance
-
+	    print '------------------'
             sleep(2)
             location = gpsp.get_location()
             data = imu.IMURead()
