@@ -1,0 +1,116 @@
+Using settings file RTIMULib.ini
+IMU Name: L3GD20H + LSM303DLHC
+IMU Init Succeeded
+Recommended Poll Interval: 8mS
+
+No fix
+No fix
+Have fix
+Have IMU reading
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.272686667 ,  -9.059563333
+Read yaw: -25.004699
+Heading: 244.995301
+Filtered lat/lng:  53.2729089999 ,  -9.05958399999
+Bearing:  307.489144499  Distance:  69.9751674009
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.272686667 ,  -9.0595641665
+Read yaw: -24.782062
+Heading: 245.217938
+Filtered lat/lng:  53.2729089858 ,  -9.05958399873
+Bearing:  307.490125966  Distance:  69.97619274
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.2726872223 ,  -9.059565
+Read yaw: -24.166816
+Heading: 245.833184
+Filtered lat/lng:  53.2729089717 ,  -9.05958399753
+Bearing:  307.491102393  Distance:  69.9772085177
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.2726875 ,  -9.05956583325
+Read yaw: -23.329952
+Heading: 246.670048
+Filtered lat/lng:  53.2729089577 ,  -9.05958399638
+Bearing:  307.492075347  Distance:  69.9782162706
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.272688 ,  -9.0595666666
+Read yaw: -25.192197
+Heading: 244.807803
+Filtered lat/lng:  53.2729089438 ,  -9.05958399529
+Bearing:  307.493043843  Distance:  69.9792151092
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.2726883333 ,  -9.05956777767
+Read yaw: -25.852450
+Heading: 244.147550
+Filtered lat/lng:  53.2729089299 ,  -9.05958399427
+Bearing:  307.494013096  Distance:  69.9802088426
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.2726885714 ,  -9.05956880943
+Read yaw: -23.962493
+Heading: 246.037507
+Filtered lat/lng:  53.272908916 ,  -9.05958399331
+Bearing:  307.494983301  Distance:  69.9811980615
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.2726889584 ,  -9.05956979162
+Read yaw: -26.282213
+Heading: 243.717787
+Filtered lat/lng:  53.2729089021 ,  -9.05958399241
+Bearing:  307.495958017  Distance:  69.9821866999
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.2726894444 ,  -9.05957092589
+Read yaw: -26.666503
+Heading: 243.333497
+Filtered lat/lng:  53.2729088882 ,  -9.05958399158
+Bearing:  307.496937538  Distance:  69.9831742108
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.27269 ,  -9.0595721666
+Read yaw: -24.665898
+Heading: 245.334102
+Filtered lat/lng:  53.2729088744 ,  -9.05958399083
+Bearing:  307.497911453  Distance:  69.9841495418
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.2726906061 ,  -9.05957333327
+Read yaw: -25.089349
+Heading: 244.910651
+Filtered lat/lng:  53.2729088606 ,  -9.05958399016
+Bearing:  307.498886504  Distance:  69.9851198935
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.2726911112 ,  -9.05957444442
+Read yaw: -24.263289
+Heading: 245.736711
+Filtered lat/lng:  53.2729088467 ,  -9.05958398955
+Bearing:  307.499865687  Distance:  69.9860884857
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.2726916667 ,  -9.05957538462
+Read yaw: -23.234849
+Heading: 246.765151
+Filtered lat/lng:  53.272908833 ,  -9.05958398901
+Bearing:  307.50083794  Distance:  69.987045323
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.2726916667 ,  -9.05957538462
+Read yaw: -24.076844
+Heading: 245.923156
+Filtered lat/lng:  53.2729088193 ,  -9.05958398847
+Bearing:  307.501812508  Distance:  69.9880044861
+------------------
+Next lat/lng:  53.273292 ,  -9.060419
+Read lat/lng (moving avg):  53.2726922619 ,  -9.0595763095
+Read yaw: -24.275396
+Heading: 245.724604
+Filtered lat/lng:  53.2729088056 ,  -9.05958398798
+Bearing:  307.502786438  Distance:  69.9889581944
+------------------
+^C
+Killing Thread.
