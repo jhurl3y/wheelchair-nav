@@ -1,4 +1,3 @@
-import gps_poller 
 import time
 import RTIMU 
 import sys, getopt 
@@ -7,10 +6,10 @@ import os.path
 import time 
 import math 
 import navigation as nav
-import gps_estimation as estimator
 import gps_obj
 from time import sleep
 from dual_mc33926_rpi import motors, MAX_SPEED
+import PID
 
 SETTINGS_FILE = "RTIMULib"
 
@@ -35,7 +34,6 @@ imu.setSlerpPower(0.02)
 imu.setGyroEnable(True)
 imu.setAccelEnable(True)
 imu.setCompassEnable(True)
-estimator = estimator.Estimator(0)
 poll_interval = imu.IMUGetPollInterval()
 print("Recommended Poll Interval: %dmS\n" % poll_interval)
 motors.enable()
@@ -95,7 +93,7 @@ try:
         print 'Read yaw: %f' % math.degrees(fusionPose[2])
         heading = nav.yaw_to_heading(yaw, -90.0)
         print 'Heading: %f' % heading
-        time.sleep(0.02)
+        sleep(1)
 
     motors.setSpeeds(0, 0)
     
