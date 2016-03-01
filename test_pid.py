@@ -77,20 +77,34 @@ try:
 
     for i in range(1, END):
         pid.update(heading)
-        output = pid.output
 
-	if i >= 10:
-	    if -0.5 < output < 0.5:
-	        print output
-    		motors.setSpeeds(0, 0)
-	       	break
-
-        if output > 0.0:
-            motors.motor1.setSpeed(int(0.2*MAX_SPEED))
-            motors.motor2.setSpeed(int(-0.2*MAX_SPEED))
-        elif output < 0.0:
+        if output < -30.0:
             motors.motor1.setSpeed(int(-0.2*MAX_SPEED))
             motors.motor2.setSpeed(int(0.2*MAX_SPEED))
+        elif output > 30.0:
+            motors.motor1.setSpeed(int(0.2*MAX_SPEED))
+            motors.motor2.setSpeed(int(-0.2*MAX_SPEED))
+        elif output < -15.0:
+            motors.motor1.setSpeed(int(-0.15*MAX_SPEED))
+            motors.motor2.setSpeed(int(0.15*MAX_SPEED))
+        elif output > 15.0:
+            motors.motor1.setSpeed(int(0.15*MAX_SPEED))
+            motors.motor2.setSpeed(int(-0.15*MAX_SPEED))
+        elif output < -5.0:
+            motors.motor1.setSpeed(int(-0.12*MAX_SPEED))
+            motors.motor2.setSpeed(int(0.12*MAX_SPEED))
+        elif output > 5.0:
+            motors.motor1.setSpeed(int(0.12*MAX_SPEED))
+            motors.motor2.setSpeed(int(-0.12*MAX_SPEED))
+        else:
+            if -0.001 < output < 0.001:
+                break
+            if output > 0.0:
+                motors.motor1.setSpeed(int(0.1*MAX_SPEED))
+                motors.motor2.setSpeed(int(-0.1*MAX_SPEED))
+            elif output < 0.0:
+                motors.motor1.setSpeed(int(-0.1*MAX_SPEED))
+                motors.motor2.setSpeed(int(0.1*MAX_SPEED))
 
         read = imu.IMURead() 
 
