@@ -1,14 +1,14 @@
-import time
+import time 
 import RTIMU 
 import sys, getopt 
 sys.path.append('.') 
 import os.path 
 import time 
 import math 
-import navigation as nav
-import gps_obj
-from time import sleep
-from dual_mc33926_rpi import motors, MAX_SPEED
+import navigation as nav 
+import gps_obj 
+from time import sleep 
+from dual_mc33926_rpi import motors, MAX_SPEED 
 import PID
 
 SETTINGS_FILE = "RTIMULib"
@@ -40,12 +40,6 @@ motors.enable()
 motors.setSpeeds(0, 0)
 
 try:
-    # while True:
-    # 	if imu.IMURead():
-    #         data = imu.getIMUData()
-    #         fusionPose = data["fusionPose"]
-    #         print("yaw: %f" % math.degrees(fusionPose[2]))
-    #         time.sleep(poll_interval*1.0/1000.0)
     last_waypoint = gps_obj.GPS(53.272909, -9.059584)
     next_waypoint = gps_obj.GPS(53.273292, -9.060419)
 
@@ -71,7 +65,7 @@ try:
 
     P = 1.2
     I = 1
-    D = 0.0
+    D = 0
     L = 200
 
     pid = PID.PID(P, I, D)
@@ -85,29 +79,34 @@ try:
         pid.update(heading)
         output = pid.output
 
-        if output > 0:
-            motors.motor1.setSpeed(2)
-            motors.motor2.setSpeed(-2)
-        elif output < 0:
-            motors.motor1.setSpeed(-2)
-            motors.motor2.setSpeed(2)
+	if i >= 10:
+	    if -0.5 < output < 0.5:
+	        print output
+    		motors.setSpeeds(0, 0)
+	       	break
+
+        if output > 0.0:
+            motors.motor1.setSpeed(int(0.2*MAX_SPEED))
+            motors.motor2.setSpeed(int(-0.2*MAX_SPEED))
+        elif output < 0.0:
+            motors.motor1.setSpeed(int(-0.2*MAX_SPEED))
+            motors.motor2.setSpeed(int(0.2*MAX_SPEED))
 
         read = imu.IMURead() 
 
         while read is None:
             print 'No IMU reading'
-            sleep(1)
             read = imu.IMURead() 
 
         data = imu.getIMUData()
         fusionPose = data["fusionPose"]
         yaw = math.degrees(fusionPose[2])
-        print 'Read yaw: %f' % yaw
         heading = nav.yaw_to_heading(yaw, -90.0)
         print 'Heading: %f' % heading
-        sleep(0.5)
+        print 'Bearing: ', bearing
+        sleep(0.1)
+        motors.setSpeeds(0, 0)
 
-    motors.setSpeeds(0, 0)
     
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     print "\nStop..."
