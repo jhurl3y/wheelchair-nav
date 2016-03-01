@@ -40,62 +40,67 @@ motors.enable()
 motors.setSpeeds(0, 0)
 
 try:
-    last_waypoint = gps_obj.GPS(53.272909, -9.059584)
-    next_waypoint = gps_obj.GPS(53.273292, -9.060419)
-
-    read = imu.IMURead() 
-
-    while read is None:
-        print 'No IMU reading'
-        sleep(1)
-        read = imu.IMURead() 
-
-    print 'Have IMU reading'
-        
-    data = imu.getIMUData()
-     
-    fusionPose = data["fusionPose"]
-    yaw = math.degrees(fusionPose[2])
-    print 'Read yaw: %f' % math.degrees(fusionPose[2])
-
-    heading = nav.yaw_to_heading(yaw, -90.0)
-    print 'Heading: %f' % heading
-
-    bearing = nav.get_bearing(last_waypoint, next_waypoint)
-    print 'Bearing: ', bearing
-
-    P = 1.2
-    I = 1
-    D = 0.0
-    L = 200
-
-    pid = PID.PID(P, I, D)
-
-    pid.SetPoint=bearing
-    pid.setSampleTime(0.01)
-
-    END = L
-
-    for i in range(1, END):
-        pid.update(heading)
-        output = pid.output
-
-        if output > 0:
-            motors.motor1.setSpeed(2)
-            motors.motor2.setSpeed(-2)
-        elif output < 0:
-            motors.motor1.setSpeed(-2)
-            motors.motor2.setSpeed(2)
-
+    if imu.IMURead():
         data = imu.getIMUData()
         fusionPose = data["fusionPose"]
-        yaw = math.degrees(fusionPose[2])
-        print 'Read yaw: %f' % math.degrees(fusionPose[2])
-        heading = nav.yaw_to_heading(yaw, -90.0)
-        print 'Heading: %f' % heading
-        sleep(1)
+        print("yaw: %f" % math.degrees(fusionPose[2]))
+        time.sleep(poll_interval*1.0/1000.0)
+    # last_waypoint = gps_obj.GPS(53.272909, -9.059584)
+    # next_waypoint = gps_obj.GPS(53.273292, -9.060419)
 
-    motors.setSpeeds(0, 0)
+    # read = imu.IMURead() 
+
+    # while read is None:
+    #     print 'No IMU reading'
+    #     sleep(1)
+    #     read = imu.IMURead() 
+
+    # print 'Have IMU reading'
+        
+    # data = imu.getIMUData()
+     
+    # fusionPose = data["fusionPose"]
+    # yaw = math.degrees(fusionPose[2])
+    # print 'Read yaw: %f' % math.degrees(fusionPose[2])
+
+    # heading = nav.yaw_to_heading(yaw, -90.0)
+    # print 'Heading: %f' % heading
+
+    # bearing = nav.get_bearing(last_waypoint, next_waypoint)
+    # print 'Bearing: ', bearing
+
+    # P = 1.2
+    # I = 1
+    # D = 0.0
+    # L = 200
+
+    # pid = PID.PID(P, I, D)
+
+    # pid.SetPoint=bearing
+    # pid.setSampleTime(0.01)
+
+    # END = L
+
+    # for i in range(1, END):
+    #     pid.update(heading)
+    #     output = pid.output
+
+    #     if output > 0:
+    #         motors.motor1.setSpeed(2)
+    #         motors.motor2.setSpeed(-2)
+    #     elif output < 0:
+    #         motors.motor1.setSpeed(-2)
+    #         motors.motor2.setSpeed(2)
+
+    #     data = imu.getIMUData()
+    #     fusionPose = data["fusionPose"]
+    #     yaw = math.degrees(fusionPose[2])
+    #     print 'Read yaw: %f' % math.degrees(fusionPose[2])
+    #     heading = nav.yaw_to_heading(yaw, -90.0)
+    #     print 'Heading: %f' % heading
+    #     sleep(1)
+
+    # motors.setSpeeds(0, 0)
     
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     print "\nStop..."
