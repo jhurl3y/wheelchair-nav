@@ -40,11 +40,12 @@ motors.enable()
 motors.setSpeeds(0, 0)
 
 try:
-    if imu.IMURead():
-        data = imu.getIMUData()
-        fusionPose = data["fusionPose"]
-        print("yaw: %f" % math.degrees(fusionPose[2]))
-        time.sleep(poll_interval*1.0/1000.0)
+    while True:
+    	if imu.IMURead():
+            data = imu.getIMUData()
+            fusionPose = data["fusionPose"]
+            print("yaw: %f" % math.degrees(fusionPose[2]))
+            time.sleep(poll_interval*1.0/1000.0)
     # last_waypoint = gps_obj.GPS(53.272909, -9.059584)
     # next_waypoint = gps_obj.GPS(53.273292, -9.060419)
 
