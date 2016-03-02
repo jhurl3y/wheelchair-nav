@@ -38,7 +38,7 @@ poll_interval = imu.IMUGetPollInterval()
 print("Recommended Poll Interval: %dmS\n" % poll_interval)
 motors.enable()
 motors.setSpeeds(0, 0)
-j = 0
+
 try:
     last_waypoint = gps_obj.GPS(53.272909, -9.059584)
     next_waypoint = gps_obj.GPS(53.273292, -9.060419)
@@ -66,52 +66,40 @@ try:
     P = 1.2
     I = 1
     D = 0
-    L = 500
+    L = 100
 
     pid = PID.PID(P, I, D)
 
     pid.SetPoint=bearing
     pid.setSampleTime(0.01)
+    motor_val = 0
 
     END = L
+    max_out = 150.0
 
     for i in range(1, END):
         pid.update(heading)
-	output = pid.output
-	print output 
+        output = pid.output
 
-        if output < -30.0:
-            motors.motor1.setSpeed(int(-0.2*MAX_SPEED))
-            motors.motor2.setSpeed(int(0.2*MAX_SPEED))
-        elif output > 30.0:
-            motors.motor1.setSpeed(int(0.2*MAX_SPEED))
-            motors.motor2.setSpeed(int(-0.2*MAX_SPEED))
-        elif output < -15.0:
-            motors.motor1.setSpeed(int(-0.15*MAX_SPEED))
-            motors.motor2.setSpeed(int(0.15*MAX_SPEED))
-        elif output > 15.0:
-            motors.motor1.setSpeed(int(0.15*MAX_SPEED))
-            motors.motor2.setSpeed(int(-0.15*MAX_SPEED))
-        elif output < -5.0:
-            motors.motor1.setSpeed(int(-0.12*MAX_SPEED))
-            motors.motor2.setSpeed(int(0.12*MAX_SPEED))
-        elif output > 5.0:
-            motors.motor1.setSpeed(int(0.12*MAX_SPEED))
-            motors.motor2.setSpeed(int(-0.12*MAX_SPEED))
+        # if output > max_out:
+        #     output = max_out
+        # elif output < -max_out
+        #     output = -max_out
+        motor_val += (output - (1/i))
+
+        if motor_val > 0.2*MAX_SPEED:
+            motor_val = int(0.2*MAX_SPEED)
+        elif motor_val < 0.1*MAX_SPEED:
+            motor_val = int(0.1*MAX_SPEED)
         else:
-	    
-            if -0.3 < output < 0.3:
-		if i > 3:
-		    j = j + 1
-		    if j == 2:
-			print j
-                        break 
-            if output > 0.0:
-                motors.motor1.setSpeed(int(0.1*MAX_SPEED))
-                motors.motor2.setSpeed(int(-0.1*MAX_SPEED))
-            elif output < 0.0:
-                motors.motor1.setSpeed(int(-0.1*MAX_SPEED))
-                motors.motor2.setSpeed(int(0.1*MAX_SPEED))
+            motor_val = int(motor_val)
+
+        if output > 0.0:
+            motors.motor1.setSpeed(motor_val)
+            motors.motor2.setSpeed(-motor_val)
+        elif output <0.0:
+            motors.motor1.setSpeed(-motor_val)
+            motors.motor2.setSpeed(motor_val)
 
         read = imu.IMURead() 
 
@@ -136,6 +124,32 @@ except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
 
 
 
-
+    # if output < -30.0:
+    #     motors.motor1.setSpeed(int(-0.2*MAX_SPEED))
+    #     motors.motor2.setSpeed(int(0.2*MAX_SPEED))
+    # elif output > 30.0:
+    #     motors.motor1.setSpeed(int(0.2*MAX_SPEED))
+    #     motors.motor2.setSpeed(int(-0.2*MAX_SPEED))
+    # elif output < -15.0:
+    #     motors.motor1.setSpeed(int(-0.15*MAX_SPEED))
+    #     motors.motor2.setSpeed(int(0.15*MAX_SPEED))
+    # elif output > 15.0:
+    #     motors.motor1.setSpeed(int(0.15*MAX_SPEED))
+    #     motors.motor2.setSpeed(int(-0.15*MAX_SPEED))
+    # elif output < -5.0:
+    #     motors.motor1.setSpeed(int(-0.12*MAX_SPEED))
+    #     motors.motor2.setSpeed(int(0.12*MAX_SPEED))
+    # elif output > 5.0:
+    #     motors.motor1.setSpeed(int(0.12*MAX_SPEED))
+    #     motors.motor2.setSpeed(int(-0.12*MAX_SPEED))
+    # else:
+    #     if -0.001 < output < 0.001:
+    #         break
+    #     if output > 0.0:
+    #         motors.motor1.setSpeed(int(0.1*MAX_SPEED))
+    #         motors.motor2.setSpeed(int(-0.1*MAX_SPEED))
+    #     elif output < 0.0:
+    #         motors.motor1.setSpeed(int(-0.1*MAX_SPEED))
+    #         motors.motor2.setSpeed(int(0.1*MAX_SPEED))
 
 
