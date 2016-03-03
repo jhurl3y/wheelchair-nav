@@ -119,11 +119,12 @@ try:
         print 'Heading: %f' % heading
         print 'Bearing: ', bearing
 
-        if abs(heading - bearing) < 1.0:
+        if abs(heading - bearing) < 0.2:
             break
 
         sleep(0.1)
         motors.setSpeeds(0, 0)
+    motors.setSpeeds(0, 0)
 
     
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c

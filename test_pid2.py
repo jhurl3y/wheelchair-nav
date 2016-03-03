@@ -64,7 +64,7 @@ try:
     print 'Bearing: ', bearing
 
     P = 1.2
-    I = 1.3
+    I = 1
     D = 0
     L = 200
 
@@ -92,19 +92,22 @@ try:
         print 'Output: %f' % output 
         print 'Motor Val: %f' % motor_val
 
-        drive = 0.4*MAX_SPEED - motor_val
+        drive = motor_val#0.4*MAX_SPEED - motor_val/1000
+	#print drive
 
-        if drive < 0.16*MAX_SPEED:
-            drive = int(0.16*MAX_SPEED)
+        if drive < 0.2*MAX_SPEED:
+            drive = int(0.2*MAX_SPEED)
+	elif drive > 0.4*MAX_SPEED:    
+            drive = int(0.4*MAX_SPEED)
         else:
             drive = int(drive)
 
         if output > 0.0:
-            motors.motor1.setSpeed(0.4*MAX_SPEED)
+            motors.motor1.setSpeed(int(0.4*MAX_SPEED))
             motors.motor2.setSpeed(drive)
         elif output < 0.0:
             motors.motor1.setSpeed(drive)
-            motors.motor2.setSpeed(0.4*MAX_SPEED)
+            motors.motor2.setSpeed(int(0.4*MAX_SPEED))
 
         read = imu.IMURead() 
 
