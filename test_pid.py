@@ -81,11 +81,16 @@ try:
         pid.update(heading)
         output = pid.output
 
+        if -0.02 < output < 0.02:
+            break
+
         # if output > max_out:
         #     output = max_out
         # elif output < -max_out
         #     output = -max_out
         motor_val += (output - (1/i))
+        print 'Output: %f' % output 
+        print 'Motor Val: %f' % motor_val
 
         if motor_val > 0.2*MAX_SPEED:
             motor_val = int(0.2*MAX_SPEED)
