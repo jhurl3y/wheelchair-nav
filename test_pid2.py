@@ -92,19 +92,19 @@ try:
         print 'Output: %f' % output 
         print 'Motor Val: %f' % motor_val
 
-        if motor_val > 0.2*MAX_SPEED:
-            drive = int(0.2*MAX_SPEED)
-        elif motor_val < 0.12*MAX_SPEED:
-            drive = int(0.12*MAX_SPEED)
+        drive = 0.4*MAX_SPEED - motor_val
+
+        if drive < 0.16*MAX_SPEED:
+            drive = int(0.16*MAX_SPEED)
         else:
-            drive = int(motor_val)
+            drive = int(drive)
 
         if output > 0.0:
-            motors.motor1.setSpeed(drive)
-            motors.motor2.setSpeed(-drive)
-        elif output < 0.0:
-            motors.motor1.setSpeed(-drive)
+            motors.motor1.setSpeed(0.4*MAX_SPEED)
             motors.motor2.setSpeed(drive)
+        elif output < 0.0:
+            motors.motor1.setSpeed(drive)
+            motors.motor2.setSpeed(0.4*MAX_SPEED)
 
         read = imu.IMURead() 
 
@@ -118,9 +118,6 @@ try:
         heading = nav.yaw_to_heading(yaw, -90.0)
         print 'Heading: %f' % heading
         print 'Bearing: ', bearing
-
-        if abs(heading - bearing) < 1.0:
-            break
 
         sleep(0.1)
         motors.setSpeeds(0, 0)
