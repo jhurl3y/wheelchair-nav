@@ -66,7 +66,7 @@ try:
     P = 1.2
     I = 1
     D = 0
-    L = 100
+    L = 200
 
     pid = PID.PID(P, I, D)
 
@@ -89,15 +89,15 @@ try:
 
         if motor_val > 0.2*MAX_SPEED:
             motor_val = int(0.2*MAX_SPEED)
-        elif motor_val < 0.1*MAX_SPEED:
-            motor_val = int(0.1*MAX_SPEED)
+        elif motor_val < 0.12*MAX_SPEED:
+            motor_val = int(0.12*MAX_SPEED)
         else:
             motor_val = int(motor_val)
 
         if output > 0.0:
             motors.motor1.setSpeed(motor_val)
             motors.motor2.setSpeed(-motor_val)
-        elif output <0.0:
+        elif output < 0.0:
             motors.motor1.setSpeed(-motor_val)
             motors.motor2.setSpeed(motor_val)
 
