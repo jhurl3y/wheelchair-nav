@@ -78,10 +78,17 @@ try:
     max_out = 150.0
 
 #    for i in range(1, END):
+#    j = 0
     i = 0
     while True:
         i += 1
-        pid.update(heading)
+
+	if abs(360.0 + heading - bearing) < abs(heading - bearing):
+	     feedback = heading + 360.0
+	else:
+	     feedback = heading
+	
+        pid.update(feedback)
         output = pid.output
 
         # if output > max_out:
@@ -92,13 +99,21 @@ try:
         print 'Output: %f' % output 
         print 'Motor Val: %f' % motor_val
 
-        if motor_val > 0.2*MAX_SPEED:
-            drive = int(0.2*MAX_SPEED)
-        elif motor_val < 0.12*MAX_SPEED:
-            drive = int(0.12*MAX_SPEED)
-        else:
-            drive = int(motor_val)
-
+	if output >= 0.0:
+            if output > 0.7*MAX_SPEED:
+                drive = int(0.7*MAX_SPEED)
+            elif output < 0.12*MAX_SPEED:
+                drive = int(0.12*MAX_SPEED)
+            else:
+                drive = int(output)
+	else:
+            if output < -0.7*MAX_SPEED:
+                drive = int(0.7*MAX_SPEED)
+            elif output > -0.12*MAX_SPEED:
+                drive = int(0.12*MAX_SPEED)
+            else:
+                drive = int(-output)
+		
         if output > 0.0:
             motors.motor1.setSpeed(drive)
             motors.motor2.setSpeed(-drive)
@@ -119,8 +134,13 @@ try:
         print 'Heading: %f' % heading
         print 'Bearing: ', bearing
 
-        if abs(heading - bearing) < 0.2:
+        if abs(heading - bearing) < 1.0:
             break
+#	if i > 3:
+#	    if -1.0 < output < 1.0:
+#	        j += 1
+#		if j > 2:
+#		    break
 
         sleep(0.1)
         motors.setSpeeds(0, 0)
