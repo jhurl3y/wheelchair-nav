@@ -64,7 +64,7 @@ try:
     print 'Bearing: ', bearing
 
     P = 1.2
-    I = 1
+    I = 1.3
     D = 0
     L = 200
 
@@ -77,11 +77,14 @@ try:
     END = L
     max_out = 150.0
 
-    for i in range(1, END):
-        pid.update(heading)
+#    for i in range(1, END):
+    i = 0
+    while True:
+        i += 1
+	pid.update(heading)
         output = pid.output
 
-        if -0.02 < output < 0.02:
+        if abs(heading - bearing) < 1.0:
             break
 
         # if output > max_out:
