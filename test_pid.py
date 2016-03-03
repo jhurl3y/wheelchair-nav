@@ -76,7 +76,8 @@ try:
 
     END = L
     max_out = 150.0
-
+    thresh_up = 0.7*MAX_SPEED
+    thresh_lo = 0.12*MAX_SPEED
     i = 0
     while True:
         i += 1
@@ -93,17 +94,17 @@ try:
         print 'Output: %f' % output 
 
         if output >= 0.0:
-            if output > 0.7*MAX_SPEED:
-                drive = int(0.7*MAX_SPEED)
-            elif output < 0.12*MAX_SPEED:
-                drive = int(0.12*MAX_SPEED)
+            if output > thresh_up:
+                drive = int(thresh_up)
+            elif output < thresh_lo:
+                drive = int(thresh_lo)
             else:
                 drive = int(output)
         else:
-            if output < -0.7*MAX_SPEED:
-                drive = int(0.7*MAX_SPEED)
-            elif output > -0.12*MAX_SPEED:
-                drive = int(0.12*MAX_SPEED)
+            if output < -thresh_up:
+                drive = int(thresh_up)
+            elif output > -thresh_lo:
+                drive = int(thresh_lo)
             else:
                 drive = int(-output)
 		
