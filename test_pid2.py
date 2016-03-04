@@ -77,37 +77,44 @@ try:
     END = L
     max_out = 150.0
 
-#    for i in range(1, END):
+
     i = 0
     while True:
         i += 1
-        pid.update(heading)
+        
+        if abs(360.0 + heading - bearing) < abs(heading - bearing):
+            feedback = heading + 360.0
+        else:
+            feedback = heading
+    
+        pid.update(feedback)
         output = pid.output
 
-        # if output > max_out:
-        #     output = max_out
-        # elif output < -max_out
-        #     output = -max_out
         motor_val += (output - (1/i))
         print 'Output: %f' % output 
-        print 'Motor Val: %f' % motor_val
 
-        drive = motor_val#0.4*MAX_SPEED - motor_val/1000
-	#print drive
 
-        if drive < 0.2*MAX_SPEED:
-            drive = int(0.2*MAX_SPEED)
-	elif drive > 0.4*MAX_SPEED:    
-            drive = int(0.4*MAX_SPEED)
+        if output >= 0.0:
+            if output > 0.7*MAX_SPEED:
+                drive = int(0.7*MAX_SPEED)
+            elif output < 0.12*MAX_SPEED:
+                drive = int(0.12*MAX_SPEED)
+            else:
+                drive = int(output)
         else:
-            drive = int(drive)
+            if output < -0.7*MAX_SPEED:
+                drive = int(0.7*MAX_SPEED)
+            elif output > -0.12*MAX_SPEED:
+                drive = int(0.12*MAX_SPEED)
+            else:
+                drive = int(-output)
 
         if output > 0.0:
-            motors.motor1.setSpeed(int(0.4*MAX_SPEED))
+            motors.motor1.setSpeed(int(0.7*MAX_SPEED))
             motors.motor2.setSpeed(drive)
         elif output < 0.0:
             motors.motor1.setSpeed(drive)
-            motors.motor2.setSpeed(int(0.4*MAX_SPEED))
+            motors.motor2.setSpeed(int(0.7*MAX_SPEED))
 
         read = imu.IMURead() 
 
