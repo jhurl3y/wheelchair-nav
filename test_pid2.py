@@ -78,8 +78,8 @@ try:
     END = L
     max_out = 150.0
 
-    thresh_up = 1.0*MAX_SPEED
-    thresh_lo = 0.8*MAX_SPEED
+    thresh_up = 0.3*MAX_SPEED
+    thresh_lo = 0.2*MAX_SPEED
     i = 0
     while True:
         i += 1
@@ -96,9 +96,9 @@ try:
         print 'Output: %f' % output 
 	
         if output >= 0.0:
-	    speed = thresh_up - 0.5*output
+            speed = thresh_up - 0.5*output
         else:
-	    speed = thresh_up + 0.5*output
+            speed = thresh_up + 0.5*output
 
         print 'Speed: %f' % speed 
 
