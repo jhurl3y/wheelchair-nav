@@ -61,7 +61,7 @@ try:
     print 'Heading: %f' % heading
 
 #    bearing = nav.get_bearing(last_waypoint, next_waypoint) 
-    bearing = 230.0
+    bearing = 108.0
     print 'Bearing: ', bearing
 
     P = 1.2
@@ -78,41 +78,53 @@ try:
     END = L
     max_out = 150.0
 
-    thresh_up = 0.3*MAX_SPEED
+    thresh_up = 0.35*MAX_SPEED
     thresh_lo = 0.2*MAX_SPEED
     i = 0
     while True:
         i += 1
         
-        if abs(360.0 + heading - bearing) < abs(heading - bearing):
-            feedback = heading + 360.0
+       # if abs(360.0 + heading - bearing) < abs(heading - bearing):
+        #    feedback = heading + 360.0
+	if abs(360.0 - heading + bearing) < abs(heading - bearing):
+	    feedback = heading - 360.0
         else:
             feedback = heading
     
         pid.update(feedback)
         output = pid.output
 
-        motor_val += (output - (1/i))
-        print 'Output: %f' % output 
+#        motor_val += (output - (1/i))
+#        print 'Output: %f' % output 
 	
         if output >= 0.0:
-            speed = thresh_up - 0.5*output
+            speed = thresh_up - output/4.0
         else:
-            speed = thresh_up + 0.5*output
+            speed = thresh_up + output/4.0
 
-        print 'Speed: %f' % speed 
+#        print 'Speed: %f' % speed 
 
         if speed < thresh_lo:
             drive = int(thresh_lo)
         else:
             drive = int(speed)
 
-        if output > 0.0:
-            motors.motor1.setSpeed(int(thresh_up))
-            motors.motor2.setSpeed(drive)
-        elif output < 0.0:
-            motors.motor1.setSpeed(drive)
+	if abs(heading - bearing) < 2.0:
+            motors.motor1.setSpeed(int(1.2*thresh_up))
             motors.motor2.setSpeed(int(thresh_up))
+    	    print 'Both'
+	elif output > 0.0:
+            motors.motor1.setSpeed(int(1.2*thresh_up))
+            motors.motor2.setSpeed(drive)
+	   # print 'motor 1: %f' % int(1.2*thresh_up)
+	   # print 'motor 2: %f' % drive
+	    print 'Left'
+        elif output < 0.0:
+            motors.motor1.setSpeed(int(drive))
+            motors.motor2.setSpeed(int(thresh_up))
+	   # print 'motor 1: %f' % drive
+	   # print 'motor 2: %f' % int(thresh_up)
+	    print 'Right'
 
         read = imu.IMURead() 
 
