@@ -82,8 +82,13 @@ try:
     while True:
         i += 1
         
-        if abs(360.0 + heading - bearing) < abs(heading - bearing):
-            feedback = heading + 360.0
+        # if abs(360.0 + heading - bearing) < abs(heading - bearing):
+        #     feedback = heading + 360.0
+        # else:
+        #     feedback = heading
+
+        if abs(360.0 - heading + bearing) < abs(heading - bearing):
+                feedback = heading - 360.0
         else:
             feedback = heading
 	
