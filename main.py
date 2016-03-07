@@ -50,7 +50,7 @@ try:
 
     while True:
 
-	   location = gpsp.get_location()
+	location = gpsp.get_location()
 
         # Have to wait initially to get fix
         while location is None:

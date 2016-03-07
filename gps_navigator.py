@@ -48,11 +48,12 @@ class NAVIGATOR:
         self.poll_interval = self.imu.IMUGetPollInterval()
         print("Recommended Poll Interval: %dmS\n" % self.poll_interval)
         self.check_gps()
+        motors.enable()
+        motors.setSpeeds(0, 0)
+
 
     def go(self, start, end):
         try:
-            motors.enable()
-            motors.setSpeeds(0, 0)
             print 'Turning to bearing angle'
             self.turn(start, end)
             motors.setSpeeds(0, 0)
@@ -79,7 +80,7 @@ class NAVIGATOR:
         print 'Have IMU reading'
 
     def check_gps(self):
-        self.location = gpsp.get_location()
+        self.location = self.gpsp.get_location()
 
         # Have to wait initially to get fix
         while self.location is None:
@@ -175,7 +176,7 @@ class NAVIGATOR:
             if abs(heading - bearing) < 1.0:
                 break
 
-            sleep(0.1)
+            sleep(0.2)
             motors.setSpeeds(0, 0)      
 
     def drive(self, start, end):
