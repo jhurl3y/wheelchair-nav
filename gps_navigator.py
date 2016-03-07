@@ -15,7 +15,7 @@ import PID
 class NAVIGATOR:
 
     def __init__(self):
-        start_sensors()
+        self.start_sensors()
 
     def start_sensors(self):
         # create the threads
@@ -45,20 +45,20 @@ class NAVIGATOR:
         self.imu.setAccelEnable(True)
         self.imu.setCompassEnable(True)
         self.estimator = estimator.Estimator(0.5)
-        self.poll_interval = imu.IMUGetPollInterval()
-        print("Recommended Poll Interval: %dmS\n" % poll_interval)
+        self.poll_interval = self.imu.IMUGetPollInterval()
+        print("Recommended Poll Interval: %dmS\n" % self.poll_interval)
 
     def go(self, start, end):
         try:
             motors.enable()
             motors.setSpeeds(0, 0)
             print 'Turning to bearing angle'
-            turn(start, end)
+            self.turn(start, end)
             motors.setSpeeds(0, 0)
             sleep(1)
             print 'Driving to destination'
             self.estimator = estimator.Estimator(0.5)
-            drive(start, end)
+            self.drive(start, end)
             motors.setSpeeds(0, 0)
             sleep(1)
             print 'Reached destination'
@@ -100,9 +100,9 @@ class NAVIGATOR:
 
 
     def turn(self, start, end):
-        check_imu()
+        self.check_imu()
             
-        data = imu.getIMUData()
+        data = self.imu.getIMUData()
         fusionPose = data["fusionPose"]
         yaw = math.degrees(fusionPose[2])
 
@@ -162,7 +162,7 @@ class NAVIGATOR:
                 motors.motor1.setSpeed(-drive)
                 motors.motor2.setSpeed(drive)
 
-            check_imu()
+            self.check_imu()
 
             data = self.imu.getIMUData()
             fusionPose = data["fusionPose"]
@@ -178,14 +178,14 @@ class NAVIGATOR:
             motors.setSpeeds(0, 0)      
 
     def drive(self, start, end):
-        check_gps()
-        check_imu()
+        self.check_gps()
+        self.check_imu()
 
         self.last_waypoint = start
         current_timestamp = time.time() # gpsp.get_timestamp()
         self.last_waypoint.set_timestamp(current_timestamp)
             
-        data = imu.getIMUData()
+        data = self.imu.getIMUData()
         fusionPose = data["fusionPose"]
         yaw = math.degrees(fusionPose[2])
  
@@ -246,9 +246,9 @@ class NAVIGATOR:
                 motors.motor2.setSpeed(int(thresh_up))
                 print 'Right'
 
-            check_gps()
-            check_imu()
-            estimate_position()
+            self.check_gps()
+            self.check_imu()
+            self.estimate_position()
 
             data = self.imu.getIMUData()
             fusionPose = data["fusionPose"]
