@@ -47,6 +47,7 @@ class NAVIGATOR:
         self.estimator = estimator.Estimator(0.5)
         self.poll_interval = self.imu.IMUGetPollInterval()
         print("Recommended Poll Interval: %dmS\n" % self.poll_interval)
+        self.check_gps()
 
     def go(self, start, end):
         try:
@@ -55,12 +56,12 @@ class NAVIGATOR:
             print 'Turning to bearing angle'
             self.turn(start, end)
             motors.setSpeeds(0, 0)
-            sleep(1)
-            print 'Driving to destination'
-            self.estimator = estimator.Estimator(0.5)
-            self.drive(start, end)
-            motors.setSpeeds(0, 0)
-            sleep(1)
+            #sleep(1)
+            #print 'Driving to destination'
+            #self.estimator = estimator.Estimator(0.5)
+            #self.drive(start, end)
+            #motors.setSpeeds(0, 0)
+            #sleep(1)
             print 'Reached destination'
         except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
             print "\nStop..."
