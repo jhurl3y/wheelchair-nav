@@ -9,6 +9,7 @@ loc_b = gps.GPS(53.273292, -9.060419)# st josephs
 
 nav = gps_navigator.NAVIGATOR()
 nav.go(loc_a, loc_b)
+nav.end_journey()
 # # print(nav.get_bearing(loc_a, loc_b))
 # # print(nav.get_distance(loc_a, loc_b))
 # print(nav.convert_from_degrees(70.450769123428)) # 70.450769

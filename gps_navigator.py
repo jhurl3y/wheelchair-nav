@@ -69,6 +69,17 @@ class NAVIGATOR:
             print "\nStop..."
             motors.setSpeeds(0, 0)
             motors.disable()
+	    print "\nKilling Thread..."
+    	    self.gpsp.stop()
+    	    self.gpsp.join()
+
+    def end_journey(self):
+    	print "\nStop..."
+        motors.setSpeeds(0, 0)
+        motors.disable()
+	print "\nKilling Thread..."
+    	self.gpsp.stop()
+    	self.gpsp.join()
 
     def check_imu(self):
         global imu
