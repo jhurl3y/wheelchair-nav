@@ -14,38 +14,43 @@ import PID
 
 class NAVIGATOR:
 
+    SETTINGS_FILE = "RTIMULib"
+    imu = RTIMU.RTIMU(RTIMU.Settings(SETTINGS_FILE))
+
     def __init__(self):
         self.start_sensors()
 
     def start_sensors(self):
+        global SETTINGS_FILE
+        global imu
         # create the threads
         self.gpsp = gps_poller.GpsPoller() 
         self.gpsp.start()
 
-        SETTINGS_FILE = "RTIMULib"
+        #SETTINGS_FILE = "RTIMULib"
 
         print("Using settings file " + SETTINGS_FILE + ".ini")
         if not os.path.exists(SETTINGS_FILE + ".ini"):
           print("Settings file does not exist, will be created")
 
-        s = RTIMU.Settings(SETTINGS_FILE)
-        self.imu = RTIMU.RTIMU(s)
+        # s = RTIMU.Settings(SETTINGS_FILE)
+        # self.imu = RTIMU.RTIMU(s)
 
-        print("IMU Name: " + self.imu.IMUName())
+        print("IMU Name: " + imu.IMUName())
 
-        if (not self.imu.IMUInit()):
+        if (not imu.IMUInit()):
             print("IMU Init Failed")
             sys.exit(1)
         else:
             print("IMU Init Succeeded")
 
         # this is a good time to set any fusion parameters
-        self.imu.setSlerpPower(0.02)
-        self.imu.setGyroEnable(True)
-        self.imu.setAccelEnable(True)
-        self.imu.setCompassEnable(True)
+        imu.setSlerpPower(0.02)
+        imu.setGyroEnable(True)
+        imu.setAccelEnable(True)
+        imu.setCompassEnable(True)
         self.estimator = estimator.Estimator(0.5)
-        self.poll_interval = self.imu.IMUGetPollInterval()
+        self.poll_interval = imu.IMUGetPollInterval()
         print("Recommended Poll Interval: %dmS\n" % self.poll_interval)
         self.check_gps()
         motors.enable()
@@ -70,12 +75,13 @@ class NAVIGATOR:
             motors.disable()
 
     def check_imu(self):
-        read = self.imu.IMURead() 
+        global imu
+        read = imu.IMURead() 
 
         while read is None:
             print 'No IMU reading'
             sleep(1)
-            read = self.imu.IMURead() 
+            read = imu.IMURead() 
 
         print 'Have IMU reading'
 
@@ -102,9 +108,10 @@ class NAVIGATOR:
 
 
     def turn(self, start, end):
+        global imu
         self.check_imu()
             
-        data = self.imu.getIMUData()
+        data = imu.getIMUData()
         fusionPose = data["fusionPose"]
         yaw = math.degrees(fusionPose[2])
 
@@ -166,7 +173,7 @@ class NAVIGATOR:
 
             self.check_imu()
 
-            data = self.imu.getIMUData()
+            data = imu.getIMUData()
             fusionPose = data["fusionPose"]
             yaw = math.degrees(fusionPose[2])
             heading = nav.yaw_to_heading(yaw, -90.0)
@@ -180,6 +187,7 @@ class NAVIGATOR:
             motors.setSpeeds(0, 0)      
 
     def drive(self, start, end):
+        global imu
         self.check_gps()
         self.check_imu()
 
@@ -187,7 +195,7 @@ class NAVIGATOR:
         current_timestamp = time.time() # gpsp.get_timestamp()
         self.last_waypoint.set_timestamp(current_timestamp)
             
-        data = self.imu.getIMUData()
+        data = imu.getIMUData()
         fusionPose = data["fusionPose"]
         yaw = math.degrees(fusionPose[2])
  
@@ -252,7 +260,7 @@ class NAVIGATOR:
             self.check_imu()
             self.estimate_position()
 
-            data = self.imu.getIMUData()
+            data = imu.getIMUData()
             fusionPose = data["fusionPose"]
             yaw = math.degrees(fusionPose[2])
             heading = nav.yaw_to_heading(yaw, -90.0)
