@@ -12,10 +12,12 @@ from time import sleep
 from dual_mc33926_rpi import motors, MAX_SPEED 
 import PID
 
+SETTINGS_FILE = "RTIMULib"
+s = RTIMU.Settings(SETTINGS_FILE)
+imu = RTIMU.RTIMU(s)
+
 class NAVIGATOR:
 
-    SETTINGS_FILE = "RTIMULib"
-    imu = RTIMU.RTIMU(RTIMU.Settings(SETTINGS_FILE))
 
     def __init__(self):
         self.start_sensors()
@@ -52,7 +54,7 @@ class NAVIGATOR:
         self.estimator = estimator.Estimator(0.5)
         self.poll_interval = imu.IMUGetPollInterval()
         print("Recommended Poll Interval: %dmS\n" % self.poll_interval)
-        self.check_gps()
+        #self.check_gps()
         motors.enable()
         motors.setSpeeds(0, 0)
 
