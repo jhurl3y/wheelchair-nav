@@ -18,7 +18,6 @@ imu = RTIMU.RTIMU(s)
 
 class NAVIGATOR:
 
-
     def __init__(self):
         self.start_sensors()
 
@@ -29,14 +28,9 @@ class NAVIGATOR:
         self.gpsp = gps_poller.GpsPoller() 
         self.gpsp.start()
 
-        #SETTINGS_FILE = "RTIMULib"
-
         print("Using settings file " + SETTINGS_FILE + ".ini")
         if not os.path.exists(SETTINGS_FILE + ".ini"):
           print("Settings file does not exist, will be created")
-
-        # s = RTIMU.Settings(SETTINGS_FILE)
-        # self.imu = RTIMU.RTIMU(s)
 
         print("IMU Name: " + imu.IMUName())
 
@@ -185,7 +179,7 @@ class NAVIGATOR:
             if abs(heading - bearing) < 1.0:
                 break
 
-            sleep(0.2)
+            sleep(0.1)
             motors.setSpeeds(0, 0)      
 
     def drive(self, start, end):
@@ -222,7 +216,7 @@ class NAVIGATOR:
         thresh_lo = 0.2*MAX_SPEED
 
         while True:
-
+            print nav.get_distance(self.last_waypoint, end)
             if nav.get_distance(self.last_waypoint, end) < 5.0:
                 break
             
