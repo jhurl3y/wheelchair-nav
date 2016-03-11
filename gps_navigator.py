@@ -52,7 +52,7 @@ class NAVIGATOR(threading.Thread):
         self.estimator = estimator.Estimator(0.5)
         self.poll_interval = imu.IMUGetPollInterval()
         print("Recommended Poll Interval: %dmS\n" % self.poll_interval)
-        self.check_gps()
+        #self.check_gps()
         motors.enable()
         motors.setSpeeds(0, 0)
 
@@ -68,11 +68,11 @@ class NAVIGATOR(threading.Thread):
             self.turn(start, end)
             motors.setSpeeds(0, 0)
             sleep(1)
-            print 'Driving to destination'
-            self.estimator = estimator.Estimator(0.5)
-            self.drive(start, end)
-            motors.setSpeeds(0, 0)
-            sleep(1)
+            # print 'Driving to destination'
+            # self.estimator = estimator.Estimator(0.5)
+            # self.drive(start, end)
+            # motors.setSpeeds(0, 0)
+            # sleep(1)
             print 'Reached destination'
             socket.send("Finished")
         except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
