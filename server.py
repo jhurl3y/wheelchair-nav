@@ -1,6 +1,7 @@
 from bluetooth import *
 import drive_motors
 
+
 while True:                   
     server_sock = BluetoothSocket( RFCOMM )
     server_sock.bind(("",PORT_ANY))
@@ -21,7 +22,8 @@ while True:
 
     client_sock, client_info = server_sock.accept()
     print "Accepted connection from ", client_info
-    driving = false
+    start = 0.0
+    end = 0.0
     state = 0
     STARTED_JOURNEY = 1
     NO_JOURNEY = 2
@@ -36,45 +38,51 @@ while True:
             data = client_sock.recv(1024)
 
             if len(data) != 0: 
-		data = data.split(';') 
-	    	state = int(data[0])
-		print state
+                data = data.split(';') 
+                state = int(data[0])
+            print state
 
-	    if state == STARTED_JOURNEY:
-		if data is None:
-		    continue
-		if len(data) < 2:
-		    continue
-		data = data[1]
-		print data
-	    elif state == NO_JOURNEY:
-		continue
-	    elif state == JOURNEY_PAUSED:
-		continue
-	    elif state == JOURNEY_FINISHED:
-		continue
-	    elif state == PRE_JOURNEY:
-		continue
-	    elif state == MANUAL_CONTROL:
-		if data is None:
-		    continue
-		if len(data) < 2:
-		    continue
-		data = data[1]
+    	    if state == STARTED_JOURNEY:
+        		if data is None:
+        		    continue
+        		if len(data) < 2:
+        		    continue
+        		data = data[1].split()
+                start = gps.GPS(float(data[0]), float(data[1]))
+                end = gps.GPS(float(data[2]), float(data[3]))
+                nav = gps_navigator.NAVIGATOR()
+                nav.go(start, end)
+        		
+    	    elif state == NO_JOURNEY:
+                continue
+    	    elif state == JOURNEY_PAUSED:
+                if nav is not None:
+                    print "\nKilling Thread..."
+                    nav.end_journey()
+                    nav.stop()
+    	    elif state == JOURNEY_FINISHED:
+                break
+    	    elif state == PRE_JOURNEY:
+                continue
+    	    elif state == MANUAL_CONTROL:
+                if data is None:
+                    continue
+                if len(data) < 2:
+                    continue
+                data = data[1]
             	values = map(int, data.split())
             	motor_driver.drive(values[0], values[1])
-		print values
-		
-	     
-	    #if len(data) < 10: 
-            #    values = map(int, data.split())
-            #    motor_driver.drive(values[0], values[1])
-#	    client_sock.send("Hey")
+                print values
 
     except IOError:
         pass
     finally:
+        print "\nStop..."
     	motor_driver.finish()
+        if nav is not None:
+            print "\nKilling Thread..."
+            nav.end_journey()
+            nav.stop()
 
     print "Disconnected"
     client_sock.close()

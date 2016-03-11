@@ -11,14 +11,17 @@ import gps_obj
 from time import sleep
 from dual_mc33926_rpi import motors, MAX_SPEED 
 import PID
+from bluetooth import *
 
 SETTINGS_FILE = "RTIMULib"
 s = RTIMU.Settings(SETTINGS_FILE)
 imu = RTIMU.RTIMU(s)
 
-class NAVIGATOR:
+class NAVIGATOR(threading.Thread):
 
     def __init__(self):
+        threading.Thread.__init__(self)
+        self.stop = threading.Event()
         self.start_sensors()
 
     def start_sensors(self):
@@ -52,8 +55,13 @@ class NAVIGATOR:
         motors.enable()
         motors.setSpeeds(0, 0)
 
+    def stop(self):
+        self.stop.set()
 
-    def go(self, start, end):
+    def stopped(self):
+        return self.stop.isSet()
+
+    def go(self, start, end, socket):
         try:
             print 'Turning to bearing angle'
             self.turn(start, end)
@@ -65,11 +73,12 @@ class NAVIGATOR:
             motors.setSpeeds(0, 0)
             sleep(1)
             print 'Reached destination'
+            socket.send("Finished")
         except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
             print "\nStop..."
             motors.setSpeeds(0, 0)
             motors.disable()
-	    print "\nKilling Thread..."
+            print "\nKilling Thread..."
     	    self.gpsp.stop()
     	    self.gpsp.join()
 
@@ -77,7 +86,7 @@ class NAVIGATOR:
     	print "\nStop..."
         motors.setSpeeds(0, 0)
         motors.disable()
-	print "\nKilling Thread..."
+        print "\nKilling Thread..."
     	self.gpsp.stop()
     	self.gpsp.join()
 

@@ -25,9 +25,10 @@ class GpsPoller(threading.Thread):
 		    
 
 		if curr_loc != self.locations[-1]:
-                    if len(self.locations) >= 20:
-                        self.locations.pop(0)
-	            self.locations.append(curr_loc)
+            if len(self.locations) >= 20:
+                self.locations.pop(0)
+                
+            self.locations.append(curr_loc)
             time.sleep(0.01) #set to whatever, 10 Hz
 
     def stop(self):
@@ -43,7 +44,7 @@ class GpsPoller(threading.Thread):
             for location in self.locations:
                 sum_lat = sum_lat + location[0]
                 sum_long = sum_long + location[1]
-#	    print len(self.locations)
+
             return [sum_lat/len(self.locations), sum_long/len(self.locations)]
             
     def get_timestamp(self):
