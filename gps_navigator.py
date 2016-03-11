@@ -12,6 +12,7 @@ from time import sleep
 from dual_mc33926_rpi import motors, MAX_SPEED 
 import PID
 from bluetooth import *
+import threading
 
 SETTINGS_FILE = "RTIMULib"
 s = RTIMU.Settings(SETTINGS_FILE)

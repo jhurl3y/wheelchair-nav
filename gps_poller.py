@@ -17,19 +17,17 @@ class GpsPoller(threading.Thread):
         while not self.stopped():
             self.__gpsd.next() #grab EACH set of gpsd info to clear the buffer
             if self.__gpsd.satellites:
-
 		curr_loc = [self.__gpsd.fix.latitude, self.__gpsd.fix.longitude]
 		
 		if len(self.locations) == 0:
                     self.locations.append(curr_loc)
-		    
 
 		if curr_loc != self.locations[-1]:
-            if len(self.locations) >= 20:
-                self.locations.pop(0)
+            	    if len(self.locations) >= 20:
+                        self.locations.pop(0)
                 
-            self.locations.append(curr_loc)
-            time.sleep(0.01) #set to whatever, 10 Hz
+                    self.locations.append(curr_loc)
+            	time.sleep(0.01) #set to whatever, 10 Hz
 
     def stop(self):
         self.__stop.set()

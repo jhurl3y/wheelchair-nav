@@ -1,6 +1,7 @@
 from bluetooth import *
 import drive_motors
-
+import gps_navigator 
+import gps_obj as gps
 
 while True:                   
     server_sock = BluetoothSocket( RFCOMM )
@@ -23,6 +24,7 @@ while True:
     client_sock, client_info = server_sock.accept()
     print "Accepted connection from ", client_info
     start = 0.0
+    nav = []
     end = 0.0
     state = 0
     STARTED_JOURNEY = 1
@@ -43,11 +45,12 @@ while True:
             print state
 
     	    if state == STARTED_JOURNEY:
-        		if data is None:
-        		    continue
-        		if len(data) < 2:
-        		    continue
-        		data = data[1].split()
+        	if data is None:
+        	    continue
+        	if len(data) < 2:
+        	    continue
+        	data = data[1].split()
+		print data
                 start = gps.GPS(float(data[0]), float(data[1]))
                 end = gps.GPS(float(data[2]), float(data[3]))
                 nav = gps_navigator.NAVIGATOR()
@@ -60,6 +63,7 @@ while True:
                     print "\nKilling Thread..."
                     nav.end_journey()
                     nav.stop()
+		continue
     	    elif state == JOURNEY_FINISHED:
                 break
     	    elif state == PRE_JOURNEY:
