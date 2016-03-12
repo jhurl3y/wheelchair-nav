@@ -59,12 +59,11 @@ while True:
     	    elif state == NO_JOURNEY:
                 continue
     	    elif state == JOURNEY_PAUSED:
-                if nav is not None:
+	        if nav is not None:
                     if nav.stopped() == false:
                         print "\nKilling Thread..."
                         nav.end_journey()
                         nav.stop()
-	     	        nav.join()
 		continue
     	    elif state == JOURNEY_FINISHED:
                 break
@@ -86,9 +85,11 @@ while True:
         print "\nStop..."
     	motor_driver.finish()
         if nav is not None:
-            print "\nKilling Thread..."
-            nav.stop()
-	    nav.join()
+	    if nav.stopped() == false:
+                print "\nKilling Thread..."
+                nav.end_journey()
+                nav.stop()
+	        nav.join()
     finally:
         print "\nStop..."
     	motor_driver.finish()

@@ -65,9 +65,9 @@ class NAVIGATOR(threading.Thread):
     def go(self, start, end, socket):
         try:
             print 'Turning to bearing angle'
-            self.turn(start, end)
-            motors.setSpeeds(0, 0)
-            sleep(1)
+            #self.turn(start, end)
+            #motors.setSpeeds(0, 0)
+            sleep(5)
             # print 'Driving to destination'
             # self.estimator = estimator.Estimator(0.5)
             # self.drive(start, end)
