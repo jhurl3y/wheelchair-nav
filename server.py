@@ -37,7 +37,7 @@ while True:
 
         try:
         	motor_driver = drive_motors.DriveMotors()
-        	while True:
+            while True:
                 data = client_sock.recv(1024)
 
                 if len(data) != 0: 
@@ -45,33 +45,33 @@ while True:
                     state = int(data[0])
                 print state
 
-        	    if state == STARTED_JOURNEY:
-            	if data is None:
-            	    continue
-            	if len(data) < 2:
-            	    continue
-            	data = data[1].split()
-    		print data
+                if state == STARTED_JOURNEY:
+                    if data is None:
+                        continue
+                    if len(data) < 2:
+                        continue
+                    data = data[1].split()
+                    print data
                     start = gps.GPS(float(data[0]), float(data[1]))
                     end = gps.GPS(float(data[2]), float(data[3]))
                     nav = gps_navigator.NAVIGATOR()
-    		nav.start_sensors()
+                    nav.start_sensors()
                     nav.go(start, end, client_sock)
-            		
-        	    elif state == NO_JOURNEY:
+                	
+                elif state == NO_JOURNEY:
                     continue
-        	    elif state == JOURNEY_PAUSED:
+                elif state == JOURNEY_PAUSED:
                     if nav.started == True:
                         if not nav.stopped():
                             print "\nKilling Thread..."
                             nav.end_journey()
-    	     	        nav.join()
-    		continue
-        	    elif state == JOURNEY_FINISHED:
-                    break
-        	    elif state == PRE_JOURNEY:
+                	        nav.join()
                     continue
-        	    elif state == MANUAL_CONTROL:
+                elif state == JOURNEY_FINISHED:
+                    break
+                elif state == PRE_JOURNEY:
+                    continue
+                elif state == MANUAL_CONTROL:
                     if data is None:
                         continue
                     if len(data) < 2:
