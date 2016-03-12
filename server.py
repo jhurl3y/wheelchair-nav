@@ -56,6 +56,13 @@ try:
                         continue
                     data = data[1].split()
                     print data
+                    if nav is not None:
+                        if not nav.stopped():
+                            print "\nKilling Thread..."
+                            nav.end_journey()
+                	    nav.stop()
+			    nav.join()
+
                     start = gps_obj.GPS(float(data[0]), float(data[1]))
                     end = gps_obj.GPS(float(data[2]), float(data[3]))
                     nav = gps_navigator.NAVIGATOR()
@@ -67,6 +74,13 @@ try:
                 elif state == JOURNEY_PAUSED:
                     continue
                 elif state == JOURNEY_FINISHED:
+                    if nav is not None:
+                        if not nav.stopped():
+                            print "\nKilling Thread..."
+                            nav.end_journey()
+                	    nav.stop()
+			    nav.join()
+		    print "Finished Journey"
                     break
                 elif state == PRE_JOURNEY:
                     continue
