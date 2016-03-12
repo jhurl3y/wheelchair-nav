@@ -34,9 +34,9 @@ class NAVIGATOR(threading.Thread):
         global SETTINGS_FILE
         global imu
 
-    	self.start = gps_obj.GPS(start.latitude, start.longitude)
-    	self.end = gps_obj.GPS(end.latitude, end.longitude)
-	self.socket = socket
+    	start = gps_obj.GPS(start.latitude, start.longitude)
+    	end = gps_obj.GPS(end.latitude, end.longitude)
+	    socket = socket
 	
         # create the threads
         self.gpsp = gps_poller.GpsPoller() 
@@ -73,6 +73,7 @@ class NAVIGATOR(threading.Thread):
         return self.stop.isSet()
 
     def run(self):
+        global socket
 #        try:
         print 'Turning to bearing angle'
         #self.turn(self.start, self.end)
