@@ -3,8 +3,8 @@ import drive_motors
 import gps_navigator 
 import gps_obj as gps
 
-while True: 
-    try:                  
+try: 
+    while True:                 
         server_sock = BluetoothSocket( RFCOMM )
         server_sock.bind(("",PORT_ANY))
         server_sock.listen(1)
@@ -106,5 +106,5 @@ while True:
         server_sock.close()
         print "Finished"
 
-    except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-        print "Exiting.."
+except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
+    print "Exiting.."
