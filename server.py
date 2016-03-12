@@ -65,7 +65,8 @@ try:
                         if not nav.stopped():
                             print "\nKilling Thread..."
                             nav.end_journey()
-                	    nav.join()
+                	    #nav.stop()
+			    #nav.join()
                     continue
                 elif state == JOURNEY_FINISHED:
                     break
@@ -90,7 +91,8 @@ try:
                 if not nav.stopped():
                     print "\nKilling Thread..."
                     nav.end_journey()
-    	     	nav.join()
+    	     	    #nav.stop()
+		    #nav.join()
         finally:
             print "\nStop..."
             motor_driver.finish()
@@ -98,8 +100,8 @@ try:
                 if not nav.stopped():
                     print "\nKilling Thread..."
                     nav.end_journey()
-    	     	nav.join()
-
+#    	     	    nav.stop()
+#		    nav.join()
 
         print "Disconnected"
         client_sock.close()

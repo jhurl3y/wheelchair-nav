@@ -64,32 +64,31 @@ class NAVIGATOR(threading.Thread):
         return self.stop.isSet()
 
     def go(self, start, end, socket):
-        try:
-            print 'Turning to bearing angle'
+#        try:
+         print 'Turning to bearing angle'
             #self.turn(start, end)
             #motors.setSpeeds(0, 0)
-            sleep(5)
+         sleep(5)
             # print 'Driving to destination'
             # self.estimator = estimator.Estimator(0.5)
             # self.drive(start, end)
             # motors.setSpeeds(0, 0)
             # sleep(1)
-            print 'Reached destination'
+         print 'Reached destination'
             #socket.send("Finished")
-        except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-            print "\nStop..."
-            motors.setSpeeds(0, 0)
-            motors.disable()
-            print "\nKilling Thread..."
-    	    self.gpsp.stop()
-    	    self.gpsp.join()
+#        except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
+#            print "\nStop..."
+#            motors.setSpeeds(0, 0)
+#            motors.disable()
+#            print "\nKilling Thread..."
+#    	    self.gpsp.stop()
+#    	    self.gpsp.join()
 
     def end_journey(self):
     	print "\nStop..."
         motors.setSpeeds(0, 0)
         motors.disable()
         print "\nKilling Thread..."
-	self.stop()
     	self.gpsp.stop()
     	self.gpsp.join()
 
