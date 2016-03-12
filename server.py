@@ -60,7 +60,7 @@ try:
                     end = gps_obj.GPS(float(data[2]), float(data[3]))
                     nav = gps_navigator.NAVIGATOR()
                     nav.start_sensors(start, end, client_sock)
-                    #nav.start()
+                    nav.start()
                 	
                 elif state == NO_JOURNEY:
                     continue

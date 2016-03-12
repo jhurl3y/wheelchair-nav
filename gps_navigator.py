@@ -36,7 +36,7 @@ class NAVIGATOR(threading.Thread):
 
     	start = gps_obj.GPS(start.latitude, start.longitude)
     	end = gps_obj.GPS(end.latitude, end.longitude)
-	    socket = socket
+	socket = socket
 	
         # create the threads
         self.gpsp = gps_poller.GpsPoller() 
