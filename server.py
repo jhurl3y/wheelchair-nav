@@ -36,7 +36,7 @@ while True:
         MANUAL_CONTROL = 6
 
         try:
-        	motor_driver = drive_motors.DriveMotors()
+            motor_driver = drive_motors.DriveMotors()
             while True:
                 data = client_sock.recv(1024)
 
@@ -65,7 +65,7 @@ while True:
                         if not nav.stopped():
                             print "\nKilling Thread..."
                             nav.end_journey()
-                	        nav.join()
+                	    nav.join()
                     continue
                 elif state == JOURNEY_FINISHED:
                     break
@@ -77,15 +77,15 @@ while True:
                     if len(data) < 2:
                         continue
                     data = data[1]
-                	values = map(int, data.split())
-                	motor_driver.drive(values[0], values[1])
+                    values = map(int, data.split())
+                    motor_driver.drive(values[0], values[1])
                     print values
 
         except IOError:
             pass
         except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
             print "\nStop..."
-        	motor_driver.finish()
+            motor_driver.finish()
             if nav.started == True:
                 if not nav.stopped():
                     print "\nKilling Thread..."
@@ -93,7 +93,7 @@ while True:
     	     	nav.join()
         finally:
             print "\nStop..."
-        	motor_driver.finish()
+            motor_driver.finish()
             if nav.started == True:
                 if not nav.stopped():
                     print "\nKilling Thread..."
