@@ -27,16 +27,20 @@ imu = RTIMU.RTIMU(s)
 class NAVIGATOR(threading.Thread):
 
     def __init__(self):
+	global stop
         threading.Thread.__init__(self)
-        self.stop = threading.Event()
+        stop = threading.Event()
 
-    def start_sensors(self, start, end, socket):
+    def start_sensors(self, s, e, sock):
         global SETTINGS_FILE
         global imu
+	global start
+	global end
+	global socket
 
-    	start = gps_obj.GPS(start.latitude, start.longitude)
-    	end = gps_obj.GPS(end.latitude, end.longitude)
-	socket = socket
+    	start = gps_obj.GPS(s.latitude, s.longitude)
+    	end = gps_obj.GPS(e.latitude, e.longitude)
+	socket = sock
 	
         # create the threads
         self.gpsp = gps_poller.GpsPoller() 
@@ -67,10 +71,12 @@ class NAVIGATOR(threading.Thread):
         motors.setSpeeds(0, 0)
 
     def stop(self):
-        self.stop.set()
+	global stop
+        stop.set()
 
     def stopped(self):
-        return self.stop.isSet()
+	global stop
+        return stop.isSet()
 
     def run(self):
         global socket

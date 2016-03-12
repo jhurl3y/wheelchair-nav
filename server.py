@@ -65,18 +65,19 @@ try:
                 elif state == NO_JOURNEY:
                     continue
                 elif state == JOURNEY_PAUSED:
-                    if nav is not None:
-                        if not nav.stopped():
-                            print "\nKilling Thread..."
-                            nav.end_journey()
-                	    #nav.stop()
-			    #nav.join()
                     continue
                 elif state == JOURNEY_FINISHED:
                     break
                 elif state == PRE_JOURNEY:
                     continue
                 elif state == MANUAL_CONTROL:
+                    if nav is not None:
+                        if not nav.stopped():
+                            print "\nKilling Thread..."
+                            nav.end_journey()
+                	    nav.stop()
+			    nav.join()
+
                     if data is None:
                         continue
                     if len(data) < 2:
@@ -95,8 +96,8 @@ try:
                 if not nav.stopped():
                     print "\nKilling Thread..."
                     nav.end_journey()
-    	     	    #nav.stop()
-		    #nav.join()
+    	     	    nav.stop()
+		    nav.join()
         finally:
             print "\nStop..."
             motor_driver.finish()
@@ -104,8 +105,8 @@ try:
                 if not nav.stopped():
                     print "\nKilling Thread..."
                     nav.end_journey()
-#    	     	    nav.stop()
-#		    nav.join()
+    	     	    nav.stop()
+		    nav.join()
 
         print "Disconnected"
         client_sock.close()
