@@ -76,9 +76,8 @@ class NAVIGATOR(threading.Thread):
         global socket
 #        try:
         print 'Turning to bearing angle'
-        #self.turn(self.start, self.end)
-        #motors.setSpeeds(0, 0)
-        sleep(10)
+        self.turn()
+        motors.setSpeeds(0, 0)
             # print 'Driving to destination'
             # self.estimator = estimator.Estimator(0.5)
             # self.drive(start, end)
@@ -135,7 +134,9 @@ class NAVIGATOR(threading.Thread):
         print 'Filtered lat/lng: ', last_waypoint.latitude, ', ', last_waypoint.longitude
 
 
-    def turn(self, start, end):
+    def turn(self):
+        global start
+        global end
         global imu
         self.check_imu()
             
@@ -214,7 +215,9 @@ class NAVIGATOR(threading.Thread):
             sleep(0.1)
             motors.setSpeeds(0, 0)      
 
-    def drive(self, start, end):
+    def drive(self):
+        global start
+        global end
         global imu
         self.check_gps()
         self.check_imu()
