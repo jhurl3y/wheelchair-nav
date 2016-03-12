@@ -23,8 +23,8 @@ while True:
 
     client_sock, client_info = server_sock.accept()
     print "Accepted connection from ", client_info
+    nav = gps_navigator.NAVIGATOR()
     start = 0.0
-    nav = []
     end = 0.0
     state = 0
     STARTED_JOURNEY = 1
@@ -54,16 +54,16 @@ while True:
                 start = gps.GPS(float(data[0]), float(data[1]))
                 end = gps.GPS(float(data[2]), float(data[3]))
                 nav = gps_navigator.NAVIGATOR()
+		nav.start_sensors()
                 nav.go(start, end, client_sock)
         		
     	    elif state == NO_JOURNEY:
                 continue
     	    elif state == JOURNEY_PAUSED:
-                if nav is not None:
-                    if nav.stopped():
+                if nav.started == True:
+                    if not nav.stopped():
                         print "\nKilling Thread..."
                         nav.end_journey()
-                        nav.stop()
 	     	        nav.join()
 		continue
     	    elif state == JOURNEY_FINISHED:
@@ -85,21 +85,20 @@ while True:
     except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
         print "\nStop..."
     	motor_driver.finish()
-        if nav is not None:
-            if nav.stopped():
+        if nav.started == True:
+            if not nav.stopped():
                 print "\nKilling Thread..."
                 nav.end_journey()
-                nav.stop()
-                nav.join()
+	     	nav.join()
     finally:
         print "\nStop..."
     	motor_driver.finish()
-        if nav is not None:
-            if nav.stopped():
+        if nav.started == True:
+            if not nav.stopped():
                 print "\nKilling Thread..."
                 nav.end_journey()
-                nav.stop()
-                nav.join()
+	     	nav.join()
+
 
     print "Disconnected"
     client_sock.close()

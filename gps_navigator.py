@@ -23,11 +23,12 @@ class NAVIGATOR(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.stop = threading.Event()
-        self.start_sensors()
+	self.started = False
 
     def start_sensors(self):
         global SETTINGS_FILE
         global imu
+	self.started = True
         # create the threads
         self.gpsp = gps_poller.GpsPoller() 
         self.gpsp.start()
@@ -88,6 +89,7 @@ class NAVIGATOR(threading.Thread):
         motors.setSpeeds(0, 0)
         motors.disable()
         print "\nKilling Thread..."
+	self.stop()
     	self.gpsp.stop()
     	self.gpsp.join()
 
@@ -95,7 +97,7 @@ class NAVIGATOR(threading.Thread):
         global imu
         read = imu.IMURead() 
 
-        while read is None & not self.stopped():
+        while (read is None) & (not self.stopped()):
             print 'No IMU reading'
             sleep(1)
             read = imu.IMURead() 
@@ -106,7 +108,7 @@ class NAVIGATOR(threading.Thread):
         self.location = self.gpsp.get_location()
 
         # Have to wait initially to get fix
-        while self.location is None & not self.stopped():
+        while (self.location is None) & (not self.stopped()):
             print 'No fix'
             sleep(1)
             self.location = self.gpsp.get_location()
