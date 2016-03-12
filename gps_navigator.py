@@ -1,9 +1,11 @@
+#! /usr/bin/python
+
 import gps_poller 
 import time
 import RTIMU 
 import sys, getopt 
 sys.path.append('.') 
-import os.path 
+#import os.path 
 import math 
 import navigation as nav
 import gps_estimation as estimator
@@ -13,6 +15,10 @@ from dual_mc33926_rpi import motors, MAX_SPEED
 import PID
 from bluetooth import *
 import threading
+import os
+from gps import *
+from time import *
+import time
 
 SETTINGS_FILE = "RTIMULib"
 s = RTIMU.Settings(SETTINGS_FILE)
@@ -23,15 +29,18 @@ class NAVIGATOR(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.stop = threading.Event()
-	self.started = False
 
-    def start_sensors(self):
+    def start_sensors(self, start, end, socket):
         global SETTINGS_FILE
         global imu
-	self.started = True
+
+    	self.start = gps_obj.GPS(start.latitude, start.longitude)
+    	self.end = gps_obj.GPS(end.latitude, end.longitude)
+	self.socket = socket
+	
         # create the threads
         self.gpsp = gps_poller.GpsPoller() 
-        self.gpsp.start()
+        #self.gpsp.start()
 
         print("Using settings file " + SETTINGS_FILE + ".ini")
         if not os.path.exists(SETTINGS_FILE + ".ini"):
@@ -63,19 +72,19 @@ class NAVIGATOR(threading.Thread):
     def stopped(self):
         return self.stop.isSet()
 
-    def go(self, start, end, socket):
+    def run(self):
 #        try:
-         print 'Turning to bearing angle'
-            #self.turn(start, end)
-            #motors.setSpeeds(0, 0)
-         sleep(5)
+        print 'Turning to bearing angle'
+        #self.turn(self.start, self.end)
+        #motors.setSpeeds(0, 0)
+        sleep(10)
             # print 'Driving to destination'
             # self.estimator = estimator.Estimator(0.5)
             # self.drive(start, end)
             # motors.setSpeeds(0, 0)
             # sleep(1)
-         print 'Reached destination'
-            #socket.send("Finished")
+        print 'Reached destination'
+#        self.socket.send("Finished")
 #        except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
 #            print "\nStop..."
 #            motors.setSpeeds(0, 0)
@@ -89,8 +98,8 @@ class NAVIGATOR(threading.Thread):
         motors.setSpeeds(0, 0)
         motors.disable()
         print "\nKilling Thread..."
-    	self.gpsp.stop()
-    	self.gpsp.join()
+    	#self.gpsp.stop()
+    	#self.gpsp.join()
 
     def check_imu(self):
         global imu

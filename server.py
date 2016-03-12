@@ -1,7 +1,11 @@
 from bluetooth import *
 import drive_motors
 import gps_navigator 
-import gps_obj as gps
+import gps_obj
+from time import sleep
+import sys, getopt 
+sys.path.append('.') 
+import os.path 
 
 try: 
     while True:                 
@@ -24,7 +28,7 @@ try:
 
         client_sock, client_info = server_sock.accept()
         print "Accepted connection from ", client_info
-        nav = gps_navigator.NAVIGATOR()
+        nav = None
         start = 0.0
         end = 0.0
         state = 0
@@ -52,16 +56,16 @@ try:
                         continue
                     data = data[1].split()
                     print data
-                    start = gps.GPS(float(data[0]), float(data[1]))
-                    end = gps.GPS(float(data[2]), float(data[3]))
+                    start = gps_obj.GPS(float(data[0]), float(data[1]))
+                    end = gps_obj.GPS(float(data[2]), float(data[3]))
                     nav = gps_navigator.NAVIGATOR()
-                    nav.start_sensors()
-                    nav.go(start, end, client_sock)
+                    nav.start_sensors(start, end, client_sock)
+                    #nav.start()
                 	
                 elif state == NO_JOURNEY:
                     continue
                 elif state == JOURNEY_PAUSED:
-                    if nav.started == True:
+                    if nav is not None:
                         if not nav.stopped():
                             print "\nKilling Thread..."
                             nav.end_journey()
@@ -82,12 +86,12 @@ try:
                     motor_driver.drive(values[0], values[1])
                     print values
 
-        except IOError:
-            pass
-        except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
+#        except IOError:
+#            pass
+        except (KeyboardInterrupt): #, SystemExit): #when you press ctrl+c
             print "\nStop..."
             motor_driver.finish()
-            if nav.started == True:
+            if nav is not None:
                 if not nav.stopped():
                     print "\nKilling Thread..."
                     nav.end_journey()
@@ -96,7 +100,7 @@ try:
         finally:
             print "\nStop..."
             motor_driver.finish()
-            if nav.started == True:
+            if nav is not None:
                 if not nav.stopped():
                     print "\nKilling Thread..."
                     nav.end_journey()
@@ -108,5 +112,5 @@ try:
         server_sock.close()
         print "Finished"
 
-except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
+except (KeyboardInterrupt):#, SystemExit): #when you press ctrl+c
     print "Exiting.."
