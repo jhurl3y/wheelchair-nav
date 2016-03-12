@@ -60,7 +60,7 @@ while True:
                 continue
     	    elif state == JOURNEY_PAUSED:
                 if nav is not None:
-                    if nav.stopped() == false:
+                    if nav.stopped():
                         print "\nKilling Thread..."
                         nav.end_journey()
                         nav.stop()
@@ -86,12 +86,20 @@ while True:
         print "\nStop..."
     	motor_driver.finish()
         if nav is not None:
-            print "\nKilling Thread..."
-            nav.stop()
-	    nav.join()
+            if nav.stopped():
+                print "\nKilling Thread..."
+                nav.end_journey()
+                nav.stop()
+                nav.join()
     finally:
         print "\nStop..."
     	motor_driver.finish()
+        if nav is not None:
+            if nav.stopped():
+                print "\nKilling Thread..."
+                nav.end_journey()
+                nav.stop()
+                nav.join()
 
     print "Disconnected"
     client_sock.close()

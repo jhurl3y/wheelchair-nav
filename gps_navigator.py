@@ -74,7 +74,7 @@ class NAVIGATOR(threading.Thread):
             # motors.setSpeeds(0, 0)
             # sleep(1)
             print 'Reached destination'
-            socket.send("Finished")
+            #socket.send("Finished")
         except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
             print "\nStop..."
             motors.setSpeeds(0, 0)
@@ -95,7 +95,7 @@ class NAVIGATOR(threading.Thread):
         global imu
         read = imu.IMURead() 
 
-        while read is None:
+        while read is None & not self.stopped():
             print 'No IMU reading'
             sleep(1)
             read = imu.IMURead() 
@@ -106,7 +106,7 @@ class NAVIGATOR(threading.Thread):
         self.location = self.gpsp.get_location()
 
         # Have to wait initially to get fix
-        while self.location is None:
+        while self.location is None & not self.stopped():
             print 'No fix'
             sleep(1)
             self.location = self.gpsp.get_location()
@@ -152,7 +152,7 @@ class NAVIGATOR(threading.Thread):
         thresh_up = 0.7*MAX_SPEED
         thresh_lo = 0.12*MAX_SPEED
         i = 0
-        while True:
+        while not self.stopped():
             i += 1
             
             if abs(360.0 - heading + bearing) < abs(heading - bearing):
@@ -236,7 +236,7 @@ class NAVIGATOR(threading.Thread):
         thresh_up = 0.35*MAX_SPEED
         thresh_lo = 0.2*MAX_SPEED
 
-        while True:
+        while not self.stopped():
             print nav.get_distance(self.last_waypoint, end)
             if nav.get_distance(self.last_waypoint, end) < 5.0:
                 break
