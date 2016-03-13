@@ -44,7 +44,7 @@ class NAVIGATOR(threading.Thread):
 	
         # create the threads
         self.gpsp = gps_poller.GpsPoller() 
-        #self.gpsp.start()
+        self.gpsp.start()
 
         print("Using settings file " + SETTINGS_FILE + ".ini")
         if not os.path.exists(SETTINGS_FILE + ".ini"):
@@ -66,7 +66,7 @@ class NAVIGATOR(threading.Thread):
         self.estimator = estimator.Estimator(0.5)
         self.poll_interval = imu.IMUGetPollInterval()
         print("Recommended Poll Interval: %dmS\n" % self.poll_interval)
-        #self.check_gps()
+        self.check_gps()
         motors.enable()
         motors.setSpeeds(0, 0)
 
@@ -80,33 +80,28 @@ class NAVIGATOR(threading.Thread):
 
     def run(self):
         global socket
-#        try:
-        print 'Turning to bearing angle'
-	sleep(5)
-        #self.turn()
-        #motors.setSpeeds(0, 0)
-            # print 'Driving to destination'
-            # self.estimator = estimator.Estimator(0.5)
-            # self.drive(start, end)
-            # motors.setSpeeds(0, 0)
-            # sleep(1)
-        print 'Reached destination'
+
+	if not self.stopped:
+            print 'Turning to bearing angle'
+            self.turn()
+            motors.setSpeeds(0, 0)
+	if not self.stopped:
+            print 'Driving to destination'
+            self.estimator = estimator.Estimator(0.5)
+            self.drive(start, end)
+            motors.setSpeeds(0, 0)
+	if not self.stopped:
+            print 'Reached destination'
+    
         socket.send("Finished")
-#        except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-#            print "\nStop..."
-#            motors.setSpeeds(0, 0)
-#            motors.disable()
-#            print "\nKilling Thread..."
-#    	    self.gpsp.stop()
-#    	    self.gpsp.join()
 
     def end_journey(self):
     	print "\nStop..."
         motors.setSpeeds(0, 0)
         motors.disable()
         print "\nKilling Thread..."
-    	#self.gpsp.stop()
-    	#self.gpsp.join()
+    	self.gpsp.stop()
+    	self.gpsp.join()
 
     def check_imu(self):
         global imu

@@ -89,7 +89,7 @@ try:
                             print "\nKilling Thread..."
                             nav.end_journey()
                 	    nav.stop()
-		#	    nav.join()
+			    nav.join()
 
                     if data is None:
                         continue
