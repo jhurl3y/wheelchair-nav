@@ -28,7 +28,7 @@ try:
 
         client_sock, client_info = server_sock.accept()
         print "Accepted connection from ", client_info
-        nav = None
+	nav=  None
         start = 0.0
         end = 0.0
         state = 0
@@ -56,16 +56,15 @@ try:
                         continue
                     data = data[1].split()
                     print data
-                    if nav is not None:
-                        if not nav.stopped():
-                            print "\nKilling Thread..."
-                            nav.end_journey()
-                	    nav.stop()
-			    nav.join()
-
+#                    if nav is not None:
+#                        if not nav.stopped():
+#                            print "\nKilling Thread..."
+#                            nav.end_journey()
+#                	    nav.stop()
+#			    nav.join()
+        	    nav = gps_navigator.NAVIGATOR()
                     start = gps_obj.GPS(float(data[0]), float(data[1]))
                     end = gps_obj.GPS(float(data[2]), float(data[3]))
-                    nav = gps_navigator.NAVIGATOR()
                     nav.start_sensors(start, end, client_sock)
                     nav.start()
                 	
@@ -90,7 +89,7 @@ try:
                             print "\nKilling Thread..."
                             nav.end_journey()
                 	    nav.stop()
-			    nav.join()
+		#	    nav.join()
 
                     if data is None:
                         continue
