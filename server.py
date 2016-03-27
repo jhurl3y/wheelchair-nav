@@ -40,8 +40,8 @@ try:
         MANUAL_CONTROL = 6
 
         try:
-            motor_driver = drive_motors.DriveMotors()
             while True:
+                motor_driver = drive_motors.DriveMotors()
                 data = client_sock.recv(1024)
 
                 if len(data) != 0: 
@@ -84,6 +84,7 @@ try:
                 elif state == PRE_JOURNEY:
                     continue
                 elif state == MANUAL_CONTROL:
+	            motor_driver = drive_motors.DriveMotors()
                     if nav is not None:
                         if not nav.stopped():
                             print "\nKilling Thread..."

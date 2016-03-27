@@ -168,8 +168,8 @@ class NAVIGATOR(threading.Thread):
         while not self.stopped():
             i += 1
             
-            if abs(360.0 - heading + bearing) < abs(heading - bearing):
-                feedback = heading - 360.0
+            if abs(360.0 + heading - bearing) < abs(heading - bearing):
+                feedback = heading + 360.0
             else:
                 feedback = heading
         
@@ -211,6 +211,7 @@ class NAVIGATOR(threading.Thread):
             print 'Bearing: ', bearing
 
             if abs(heading - bearing) < 1.0:
+		print "Hit bearing angle"
                 break
 
             sleep(0.1)
@@ -253,11 +254,13 @@ class NAVIGATOR(threading.Thread):
 
         while not self.stopped():
             print nav.get_distance(self.last_waypoint, end)
-            if nav.get_distance(self.last_waypoint, end) < 1.0:
+            
+	    if nav.get_distance(self.last_waypoint, end) < 5.0:
+		print "Hit waypoint"
                 break
             
-            if abs(360.0 - heading + bearing) < abs(heading - bearing):
-                feedback = heading - 360.0
+            if abs(360.0 + heading - bearing) < abs(heading - bearing):
+                feedback = heading + 360.0
             else:
                 feedback = heading
         
