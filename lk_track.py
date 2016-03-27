@@ -36,8 +36,8 @@ feature_params = dict( maxCorners = 500,
 
 class App:
     def __init__(self, video_src):
-        self.track_len = 10 # length of tracks
-        self.detect_interval = 2 # detect features every 5 frames
+        self.track_len = 5 # length of tracks
+        self.detect_interval = 5 # detect features every 5 frames
         self.tracks = [] # tracks array .. [(x,y), (x,y).. |track_len|] = 1 track ... self.tracks = array of these
         self.cam = video.create_capture(video_src)
         self.frame_idx = 0 # frame number
