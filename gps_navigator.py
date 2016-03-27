@@ -80,17 +80,16 @@ class NAVIGATOR(threading.Thread):
 
     def run(self):
         global socket
-
-	if not self.stopped:
+	if not self.stopped():
             print 'Turning to bearing angle'
             self.turn()
             motors.setSpeeds(0, 0)
-	if not self.stopped:
+	if not self.stopped():
             print 'Driving to destination'
             self.estimator = estimator.Estimator(0.5)
-            self.drive(start, end)
+            self.drive()
             motors.setSpeeds(0, 0)
-	if not self.stopped:
+	if not self.stopped():
             print 'Reached destination'
     
         socket.send("Finished")
@@ -133,7 +132,7 @@ class NAVIGATOR(threading.Thread):
         self.estimator.k_filter(self.location[0], self.location[1], 2, current_timestamp)
         self.last_waypoint = gps_obj.GPS(self.estimator.lat, self.estimator.long)
         self.last_waypoint.set_timestamp(current_timestamp)
-        print 'Filtered lat/lng: ', last_waypoint.latitude, ', ', last_waypoint.longitude
+        print 'Filtered lat/lng: ', self.last_waypoint.latitude, ', ', self.last_waypoint.longitude
 
 
     def turn(self):
@@ -254,7 +253,7 @@ class NAVIGATOR(threading.Thread):
 
         while not self.stopped():
             print nav.get_distance(self.last_waypoint, end)
-            if nav.get_distance(self.last_waypoint, end) < 5.0:
+            if nav.get_distance(self.last_waypoint, end) < 1.0:
                 break
             
             if abs(360.0 - heading + bearing) < abs(heading - bearing):
