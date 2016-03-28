@@ -48,6 +48,7 @@ class App:
         self.right_tracks = []
         self.left_mag = 0
         self.right_mag = 0
+        self.max_tracks = 100
 
     def annotate_image(self, frame):
         height, width, channels = frame.shape
@@ -88,6 +89,9 @@ class App:
                 vis = frame.copy() # frame to print
 
                 if len(self.left_tracks) > 0:
+                    if len(self.left_tracks) > self.max_tracks:
+                        for i in range(0, 10):
+                            del self.left_tracks[i]
                     img0, img1 = self.prev_gray, frame_gray
 
                     p0 = np.float32([tr[-1] for tr in self.left_tracks]).reshape(-1, 1, 2) # for each track in self.tracks get last element + reshape       
@@ -108,6 +112,9 @@ class App:
                     cv2.polylines(vis, [np.int32(tr) for tr in self.left_tracks], False, (0, 255, 0)) # nice polylines   
                 
                 if len(self.right_tracks) > 0:
+                    if len(self.right_tracks) > self.max_tracks:
+                        for i in range(0, 10):
+                            del self.right_tracks[i]
                     img0, img1 = self.prev_gray, frame_gray
 
                     p0 = np.float32([tr[-1] for tr in self.right_tracks]).reshape(-1, 1, 2) # for each track in self.tracks get last element + reshape       

@@ -39,7 +39,7 @@ class UltrasonicPoller(threading.Thread):
                 # object we take half of the distance travelled.
                 # distance = duration / 29 / 2
                 self.distance = duration * 34000 / 2
-                time.sleep(0.5)
+                time.sleep(1)
 
         finally:
             GPIO.cleanup()
