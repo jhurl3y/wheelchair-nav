@@ -164,7 +164,7 @@ class App:
                 self.frame_idx += 1 # increment
                 self.prev_gray = frame_gray # set prev_gray for next iteration
                 vis = self.annotate_image(vis)
-                draw_str(vis, (20, 100), 'ultrasonic reading: %d' % self.ultrasonics.distance) # give count 
+                draw_str(vis, (20, 100), 'ultrasonic reading: %d cm' % self.ultrasonics.distance) # give count 
                 draw_str(vis, (20, 20), 'left count: %d' % self.left_mag) # give count      
                 draw_str(vis, (500, 20), 'right count: %d' % self.right_mag) # give count 
                 cv2.imshow('lk_track', vis) # show copy of frame 'vis'
