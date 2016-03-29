@@ -2,7 +2,7 @@ import socket
 import sys
 
 HOST, PORT = "10.42.0.1", 9999
-data = " ".join(sys.argv[1:])
+data = "Hey".join(sys.argv[1:])
 
 # SOCK_DGRAM is the socket type to use for UDP sockets
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
