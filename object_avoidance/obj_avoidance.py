@@ -145,9 +145,9 @@ class App:
                     try :
                         #Set the whole string
                         if int(self.left_mag) or int(self.right_mag):
-                            self.s.sendto("left " + str(int(self.left_mag)) + " right " + str(int(self.right_mag)) + " distance " + str(int(self.ultrasonics.distance)), (self.host, self.port))
+                            self.s.sendto("distance " + str(int(self.ultrasonics.distance)) + " left " + str(int(self.left_mag)) + " right " + str(int(self.right_mag)), (self.host, self.port))
                         else:
-                            self.s.sendto("dist " + str(int(self.ultrasonics.distance)), (self.host, self.port))
+                            self.s.sendto("distane " + str(int(self.ultrasonics.distance)), (self.host, self.port))
                         # receive data from client (data, addr)
                         # d = self.s.recvfrom(1024)
                         # reply = d[0]
