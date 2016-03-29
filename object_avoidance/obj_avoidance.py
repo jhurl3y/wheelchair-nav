@@ -37,7 +37,7 @@ feature_params = dict( maxCorners = 500,
                        blockSize = 7 )
 
 class App:
-    def __init__(self, video_src, socket, host, port):
+    def __init__(self, video_src, s, host, port):
         # create the threads
         self.ultrasonics = ultrasonic_poller.UltrasonicPoller() 
         self.ultrasonics.start()
@@ -50,7 +50,7 @@ class App:
         self.left_mag = 0
         self.right_mag = 0
         self.max_tracks = 100
-        self.socket = socket
+        self.s = s
         self.host = host 
         self.port = port
 
@@ -144,9 +144,9 @@ class App:
                     
                     try :
                         #Set the whole string
-                        self.socket.sendto(str(len(self.left_tracks) - len(self.right_tracks)), (self.host, self.port))
-                        self.socket.sendto(str(len(self.ultrasonics.distance)), (self.host, self.port))
-                    except selfsocket.error, msg:
+                        self.s.sendto(str(len(self.left_tracks) - len(self.right_tracks)), (self.host, self.port))
+                        self.s.sendto(str(len(self.ultrasonics.distance)), (self.host, self.port))
+                    except socket.error, msg:
                         print 'Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
                         sys.exit()
 
@@ -215,7 +215,7 @@ def main():
     host = '10.42.0.1';
     port = 8888;
 
-    App(video_src, socket, host, port).run()
+    App(video_src, s, host, port).run()
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
