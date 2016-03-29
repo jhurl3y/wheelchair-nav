@@ -2,10 +2,10 @@ import time
 import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(23, GPIO.IN)
+GPIO.setup(11, GPIO.IN)
 try:
     while True:
-        distance = GPIO.input(23)
+        distance = GPIO.input(11)
         if distance != 0:
 	    print distance
 
