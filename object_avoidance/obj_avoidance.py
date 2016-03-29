@@ -17,7 +17,8 @@ Keys
 ----
 ESC - exit
 '''
-
+import socket   #for sockets
+import sys  #for exit
 import numpy as np
 import cv2
 import video
@@ -36,7 +37,7 @@ feature_params = dict( maxCorners = 500,
                        blockSize = 7 )
 
 class App:
-    def __init__(self, video_src):
+    def __init__(self, video_src, socket, host, port):
         # create the threads
         self.ultrasonics = ultrasonic_poller.UltrasonicPoller() 
         self.ultrasonics.start()
@@ -49,6 +50,9 @@ class App:
         self.left_mag = 0
         self.right_mag = 0
         self.max_tracks = 100
+        self.socket = socket
+        self.host = host 
+        self.port = port
 
     def annotate_image(self, frame):
         height, width, channels = frame.shape
@@ -137,6 +141,14 @@ class App:
                 if self.frame_idx % self.detect_interval == 0:
                     print "left: ", len(self.left_tracks)
                     print "right: ", len(self.right_tracks)
+                    
+                    try :
+                        #Set the whole string
+                        self.socket.sendto(str(len(self.left_tracks) - len(self.right_tracks)), (self.host, self.port))
+                        self.socket.sendto(str(len(self.ultrasonics.distance)), (self.host, self.port))
+                    except selfsocket.error, msg:
+                        print 'Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+                        sys.exit()
 
                     if len(self.left_tracks) > 0:
                         self.left_mag = 0
@@ -192,7 +204,18 @@ def main():
         video_src = 0
 
     print __doc__
-    App(video_src).run()
+
+    # create dgram udp socket
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    except socket.error:
+        print 'Failed to create socket'
+        sys.exit()
+
+    host = '10.42.0.1';
+    port = 8888;
+
+    App(video_src, socket, host, port).run()
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
