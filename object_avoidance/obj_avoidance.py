@@ -144,7 +144,7 @@ class App:
                     
                     try :
                         #Set the whole string
-                        self.s.sendto(str(len(self.left_tracks) - len(self.right_tracks)), (self.host, self.port))
+                        self.s.sendto(str(self.left_mag - self.right_mag), (self.host, self.port))
                         self.s.sendto(str(int(self.ultrasonics.distance)), (self.host, self.port))
                         # receive data from client (data, addr)
                         d = self.s.recvfrom(1024)
