@@ -16,7 +16,6 @@ class UltrasonicPoller(threading.Thread):
    
     def run(self):
         try:
-            GPIO.setup(13, GPIO.OUT)
             while not self.stopped():
                 GPIO.setup(21, GPIO.OUT)
                 GPIO.output(21, False)
@@ -39,7 +38,6 @@ class UltrasonicPoller(threading.Thread):
                 # object we take half of the distance travelled.
                 # distance = duration / 29 / 2
                 self.distance = duration * 34000 / 2
-                GPIO.output(13, int(self.distance))
                 time.sleep(1)
 
         finally:
