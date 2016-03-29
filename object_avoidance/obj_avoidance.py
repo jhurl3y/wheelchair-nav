@@ -146,6 +146,11 @@ class App:
                         #Set the whole string
                         self.s.sendto(str(len(self.left_tracks) - len(self.right_tracks)), (self.host, self.port))
                         self.s.sendto(str(len(self.ultrasonics.distance)), (self.host, self.port))
+                        # receive data from client (data, addr)
+                        d = self.s.recvfrom(1024)
+                        reply = d[0]
+                        addr = d[1]
+                        print 'Server reply : ' + reply
                     except socket.error, msg:
                         print 'Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
                         sys.exit()
