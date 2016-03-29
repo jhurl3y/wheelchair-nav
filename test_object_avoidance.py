@@ -86,8 +86,15 @@ try:
             pid.update(feedback)
             output = pid.output
 
-            speed = thresh_up - output/4.0 if output >= 0.0 else speed = thresh_up + output/4.0
-            drive = int(thresh_lo) if speed < thresh_lo else drive = int(speed)
+            if output >= 0.0:
+                speed = thresh_up - output/4.0 
+            else:
+                speed = thresh_up + output/4.0
+            
+            if speed < thresh_lo:
+                drive = int(thresh_lo)  
+            else: 
+                drive = int(speed)
 
             if output >= 0.0:
                 motors.motor1.setSpeed(int(1.2*thresh_up))
