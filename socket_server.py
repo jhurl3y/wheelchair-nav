@@ -36,10 +36,12 @@ while 1:
      
     if not data: 
         break
+    
+    data = data.strip().split()
+    print data
+    #reply = 'OK...' + data
      
-    reply = 'OK...' + data
-     
-    s.sendto(reply , addr)
-    print 'Message[' + addr[0] + ':' + str(addr[1]) + '] - ' + data.strip()
+    #s.sendto(reply , addr)
+    #print 'Message[' + addr[0] + ':' + str(addr[1]) + '] - ' + data.strip()
      
 s.close()

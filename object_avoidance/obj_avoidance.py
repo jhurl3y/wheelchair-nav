@@ -144,16 +144,18 @@ class App:
                     
                     try :
                         #Set the whole string
-                        self.s.sendto(str(self.left_mag - self.right_mag), (self.host, self.port))
-                        self.s.sendto(str(int(self.ultrasonics.distance)), (self.host, self.port))
+                        if int(self.left_mag) or int(self.right_mag):
+                            self.s.sendto("left " + str(int(self.left_mag)) + " right " + str(int(self.right_mag)) + " distance " + str(int(self.ultrasonics.distance)), (self.host, self.port))
+                        else:
+                            self.s.sendto("dist " + str(int(self.ultrasonics.distance)), (self.host, self.port))
                         # receive data from client (data, addr)
-                        d = self.s.recvfrom(1024)
-                        reply = d[0]
-                        addr = d[1]
-                        print 'Server reply : ' + reply
+                        # d = self.s.recvfrom(1024)
+                        # reply = d[0]
+                        # addr = d[1]
+                        # print 'Server reply : ' + reply
                     except socket.error, msg:
                         print 'Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
-                        sys.exit()
+                        #sys.exit()
 
                     if len(self.left_tracks) > 0:
                         self.left_mag = 0
@@ -187,11 +189,11 @@ class App:
 
                 self.frame_idx += 1 # increment
                 self.prev_gray = frame_gray # set prev_gray for next iteration
-                vis = self.annotate_image(vis)
-                draw_str(vis, (20, 100), 'ultrasonic reading: %d cm' % self.ultrasonics.distance) # give count 
-                draw_str(vis, (20, 20), 'left count: %d' % self.left_mag) # give count      
-                draw_str(vis, (500, 20), 'right count: %d' % self.right_mag) # give count 
-                cv2.imshow('lk_track', vis) # show copy of frame 'vis'
+                # vis = self.annotate_image(vis)
+                # draw_str(vis, (20, 100), 'ultrasonic reading: %d cm' % self.ultrasonics.distance) # give count 
+                # draw_str(vis, (20, 20), 'left count: %d' % self.left_mag) # give count      
+                # draw_str(vis, (500, 20), 'right count: %d' % self.right_mag) # give count 
+                # cv2.imshow('lk_track', vis) # show copy of frame 'vis'
 
                 ch = 0xFF & cv2.waitKey(1)
                 if ch == 27:
@@ -221,7 +223,7 @@ def main():
     port = 8888;
 
     App(video_src, s, host, port).run()
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     main()
