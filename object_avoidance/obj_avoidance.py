@@ -219,7 +219,7 @@ def main():
         print 'Failed to create socket'
         sys.exit()
 
-    host = '127.0.0.1'
+    host = '10.42.0.79'
     port = 8888;
 
     App(video_src, s, host, port).run()

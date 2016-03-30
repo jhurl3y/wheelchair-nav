@@ -13,7 +13,7 @@ from time import sleep
 from dual_mc33926_rpi import motors, MAX_SPEED 
 import PID
  
-HOST = '127.0.0.1'   # Symbolic name meaning all available interfaces
+HOST = '10.42.0.79'   # Symbolic name meaning all available interfaces
 PORT = 8888 # Arbitrary non-privileged port
  
 # Datagram (udp) socket
