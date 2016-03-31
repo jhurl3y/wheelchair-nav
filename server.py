@@ -6,6 +6,7 @@ from time import sleep
 import sys, getopt 
 sys.path.append('.') 
 import os.path 
+import autopilot
 
 try: 
 	while True:                 
@@ -42,7 +43,6 @@ try:
 
 		try:
 			while True:
-				motor_driver = drive_motors.DriveMotors()
 				data = client_sock.recv(1024)
 
 				if len(data) != 0: 
@@ -84,6 +84,13 @@ try:
 					continue
 
 				elif state == MANUAL_CONTROL:
+					if autopilot is not None:
+						if not autopilot.stopped():
+							autopilot.stop()
+							autopilot.join()
+
+						autopilot = None
+
 					if nav is not None:
 						if not nav.stopped():
 							print "\nKilling Thread..."
@@ -96,20 +103,23 @@ try:
 					if len(data) < 2:
 						continue
 
+					motor_driver = drive_motors.DriveMotors()
 					data = data[1]
 					values = map(int, data.split())
 					motor_driver.drive(values[0], values[1])
 					print values
 
 				elif state == AUTONOMOUS_MODE:
-					if nav is not None:
-						if not nav.stopped():
-							print "\nKilling Thread..."
-							nav.end_journey()
-							nav.stop()
-							nav.join()
-							print "Finished Journey"
-							break
+					if autopilot is not None:
+						if not autopilot.started:
+							autopilot.wait_for_client('10.42.0.79', 8888)
+						else:
+							if autopilot.bound:
+								if not autopilot.running:
+									autopilot.start()
+					else:
+						autopilot = autopilot.Autopilot()
+
 
 
 		except (KeyboardInterrupt): #, SystemExit): #when you press ctrl+c

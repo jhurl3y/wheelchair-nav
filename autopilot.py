@@ -20,9 +20,12 @@ class Autopilot(threading.Thread):
         self.__stop = threading.Event()
         self.bound = False
         self.error = False
+        self.started = False
+        self.running = False
 
     def wait_for_client(self, host, port):
         try :
+            self.started = True
             self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             print 'Socket created'
         except socket.error, msg :
@@ -41,6 +44,7 @@ class Autopilot(threading.Thread):
         print 'Socket bind complete'
    
     def run(self):
+        self.running = True
         motors.enable()
         motors.setSpeeds(0, 0)
 
@@ -133,6 +137,10 @@ class Autopilot(threading.Thread):
 
             
     def stop(self):
+        if not self.running:
+            self.s.close()
+            
+        self.running = False
         self.__stop.set()
 
     def stopped(self):
