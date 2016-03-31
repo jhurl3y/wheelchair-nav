@@ -6,7 +6,7 @@ from time import sleep
 import sys, getopt 
 sys.path.append('.') 
 import os.path 
-import autopilot
+import autopilot as autonomous_nav
 
 try: 
 	while True:                 
@@ -25,7 +25,7 @@ try:
 						)
 
 		print "Waiting for connection on RFCOMM channel %d" % port
-
+		client_sock= None
 		client_sock, client_info = server_sock.accept()
 		print "Accepted connection from ", client_info
 		nav = None
@@ -43,7 +43,7 @@ try:
 
 		try:
 			while True:
-				data = client_sock.recv(1024)
+				data = client_sock.recv(1024) # waits
 
 				if len(data) != 0: 
 					data = data.split(';') 
@@ -86,10 +86,9 @@ try:
 				elif state == MANUAL_CONTROL:
 					if autopilot is not None:
 						if not autopilot.stopped():
+							print "\nKilling Thread..."
 							autopilot.stop()
 							autopilot.join()
-
-						autopilot = None
 
 					if nav is not None:
 						if not nav.stopped():
@@ -110,19 +109,13 @@ try:
 					print values
 
 				elif state == AUTONOMOUS_MODE:
-					if autopilot is not None:
-						if not autopilot.started:
-							autopilot.wait_for_client('10.42.0.79', 8888)
-						else:
-							if autopilot.bound:
-								if not autopilot.running:
-									autopilot.start()
-					else:
-						autopilot = autopilot.Autopilot()
+					autopilot = autonomous_nav.Autopilot()
+
+					if (not autopilot.started) or autopilot.stopped() or autopilot.error:
+						autopilot.wait_for_client('10.42.0.79', 8888) # PORT_ANY
 
 
-
-		except (KeyboardInterrupt): #, SystemExit): #when you press ctrl+c
+		except (KeyboardInterrupt):#, SystemExit): #when you press ctrl+c
 			print "\nStop..."
 			motor_driver.finish()
 			if nav is not None:
@@ -149,3 +142,8 @@ try:
 
 except (KeyboardInterrupt):#, SystemExit): #when you press ctrl+c
 	print "Exiting.."
+	print "Disconnected"
+	if client_sock is not None:
+		client_sock.close() 
+	server_sock.close() 
+	print "Finished"

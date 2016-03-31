@@ -42,6 +42,8 @@ class Autopilot(threading.Thread):
         
         self.bound = True 
         print 'Socket bind complete'
+        self.s.setblocking(0)
+        self.start()
    
     def run(self):
         self.running = True
@@ -65,9 +67,12 @@ class Autopilot(threading.Thread):
             thresh_up = 0.3*MAX_SPEED
             thresh_lo = 0.15*MAX_SPEED
 
-            while not self.stopped():
-                # receive data from client (data, addr)
-                d = self.s.recvfrom(1024)
+            while not self.stopped():   
+                try:
+                    # receive data from client (data, addr)
+                    d = self.s.recvfrom(1024)
+                except socket.error , msg:
+                    continue
                 data = d[0]
                 addr = d[1]
                  
@@ -122,6 +127,12 @@ class Autopilot(threading.Thread):
                         print 'Move Left'
                         print 'Left: ', drive
                         print 'Right: ', int(thresh_up)
+               
+                else:
+                    motors.motor1.setSpeed(int(1.2*thresh_up))
+                    motors.motor2.setSpeed(int(thresh_up))
+                    print 'Move Straight'
+                    continue
       
         except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
             print "\nStop..."
@@ -133,13 +144,10 @@ class Autopilot(threading.Thread):
             print "\nStopping..."
             motors.setSpeeds(0, 0)
             motors.disable()
-            self.s.close()
-
-            
+            #self.s.close()
+        
     def stop(self):
-        if not self.running:
-            self.s.close()
-            
+        self.s.close()
         self.running = False
         self.__stop.set()
 
