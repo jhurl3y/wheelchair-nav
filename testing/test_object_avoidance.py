@@ -45,14 +45,14 @@ try:
 
     pid = PID.PID(P, I, D)
 
-    pid.SetPoint=bearing
+    pid.SetPoint=0
     pid.setSampleTime(0.01)
     motor_val = 0
 
     END = L
     max_out = 150.0
-    thresh_up = 0.35*MAX_SPEED
-    thresh_lo = 0.2*MAX_SPEED
+    thresh_up = 0.3*MAX_SPEED
+    thresh_lo = 0.15*MAX_SPEED
     i = 0
      
     #now keep talking with the client
@@ -63,15 +63,17 @@ try:
         addr = d[1]
          
         if not data: 
-            break
+            continue
         
         data = data.strip().split()
         print data
 
-        if int(data[1]) < 10:
+        if int(data[1]) < 25:
             print 'Obstacle in way!'
-            motors.setSpeeds(0, 0)
-            break
+            #motors.setSpeeds(0, 0)
+            motors.motor1.setSpeed(-int(1.2*thresh_up))
+            motors.motor2.setSpeed(-int(thresh_up))
+            continue
 
         if len(data) > 2:
             left = int(data[3])
@@ -80,11 +82,13 @@ try:
             if abs(left - right) < 5:
                 motors.motor1.setSpeed(int(1.2*thresh_up))
                 motors.motor2.setSpeed(int(thresh_up))
-                break
+                print 'Move Straight'
+                continue
 
             feedback =  left - right
             pid.update(feedback)
             output = pid.output
+            print 'output: ', output
 
             if output >= 0.0:
                 speed = thresh_up - output/4.0 
@@ -96,21 +100,22 @@ try:
             else: 
                 drive = int(speed)
 
-            if output >= 0.0:
+            if output <= 0.0:
                 motors.motor1.setSpeed(int(1.2*thresh_up))
                 motors.motor2.setSpeed(drive)
                 print 'Move Right'
+                print 'Left: ', int(1.2*thresh_up)
+                print 'Right: ', drive
+
             else:
                 motors.motor1.setSpeed(int(drive))
                 motors.motor2.setSpeed(int(thresh_up))
                 print 'Move Left'
+                print 'Left: ', drive
+                print 'Right: ', int(thresh_up)
 
-        else:
-            motors.motor1.setSpeed(int(1.2*thresh_up))
-            motors.motor2.setSpeed(int(thresh_up))
-
-        sleep(0.1)
-        motors.setSpeeds(0, 0)
+            #sleep(0.1)
+        #motors.setSpeeds(0, 0)
 
      
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
