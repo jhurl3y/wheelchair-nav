@@ -122,18 +122,6 @@ try:
 
 		except (KeyboardInterrupt):#, SystemExit): #when you press ctrl+c
 			print "\nStop..."
-			# motor_driver.finish()
-			# if autopilot is not None:
-			# 	if not autopilot.stopped():
-			# 		print "\nKilling Thread..."
-			# 		autopilot.stop()
-			# 		autopilot.join()
-			# if nav is not None:
-			# 	if not nav.stopped():
-			# 		print "\nKilling Thread..."
-			# 		nav.end_journey()
-			# 		nav.stop()
-			# 		nav.join()
 
 		finally:
 			print "\nStop..."

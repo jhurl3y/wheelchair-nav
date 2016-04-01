@@ -38,15 +38,6 @@ class IMUPoller(threading.Thread):
 	self.__poll_interval = self.__imu.IMUGetPollInterval()
 	print("Recommended Poll Interval: %dmS\n" % self.__poll_interval)
 
-#        s = RTIMU.Settings(SETTINGS_FILE)
-#        self.__imu = RTIMU.RTIMU(s)
-#	print("IMU Name: " + self.__imu.IMUName())
-#        self.__imu.IMUInit()
- #       self.__imu.setSlerpPower(0.02)
-  #      self.__imu.setGyroEnable(True)
-   #     self.__imu.setAccelEnable(True)
-    #    self.__imu.setCompassEnable(True)
-    #    self.__poll_interval = self.__imu.IMUGetPollInterval()
  	self.__data = []
         self.__stop = threading.Event()        
 
