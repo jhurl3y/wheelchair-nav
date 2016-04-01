@@ -42,8 +42,14 @@ try:
 		AUTONOMOUS_MODE = 7
 
 		try:
+			motor_driver = drive_motors.DriveMotors()
+
 			while True:
-				data = client_sock.recv(1024) # waits
+				try:
+					data = client_sock.recv(1024) # waits
+				except BluetoothError as error:
+					print 'Lost connection.. ', error
+					break
 
 				if len(data) != 0: 
 					data = data.split(';') 
@@ -114,20 +120,29 @@ try:
 					if (not autopilot.started) or autopilot.stopped() or autopilot.error:
 						autopilot.wait_for_client('10.42.0.79', 8888) # PORT_ANY
 
-
 		except (KeyboardInterrupt):#, SystemExit): #when you press ctrl+c
 			print "\nStop..."
-			motor_driver.finish()
-			if nav is not None:
-				if not nav.stopped():
-					print "\nKilling Thread..."
-					nav.end_journey()
-					nav.stop()
-					nav.join()
+			# motor_driver.finish()
+			# if autopilot is not None:
+			# 	if not autopilot.stopped():
+			# 		print "\nKilling Thread..."
+			# 		autopilot.stop()
+			# 		autopilot.join()
+			# if nav is not None:
+			# 	if not nav.stopped():
+			# 		print "\nKilling Thread..."
+			# 		nav.end_journey()
+			# 		nav.stop()
+			# 		nav.join()
 
 		finally:
 			print "\nStop..."
 			motor_driver.finish()
+			if autopilot is not None:
+				if not autopilot.stopped():
+					print "\nKilling Thread..."
+					autopilot.stop()
+					autopilot.join()
 			if nav is not None:
 				if not nav.stopped():
 					print "\nKilling Thread..."
